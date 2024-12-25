@@ -41,6 +41,8 @@ const ChatBot = () => {
         }, 1000);
     };
 
+    const vh = window.innerHeight;
+    const result = 711 - (0.8 * vh - 200);
     return (
         <Box>
             {/* Chatbot Toggle Button */}
@@ -146,8 +148,8 @@ const ChatBot = () => {
                         position: "fixed",
                         bottom: 111,
                         right: 30,
-                        width: 400,
-                        height: isMaximized ? "80vh" : "282px",
+                        width: isMaximized ? "1280px" : 400,
+                        height: isMaximized ? result : "282px",
                         borderRadius: "16px",
                         overflow: "hidden",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
