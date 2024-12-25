@@ -59,45 +59,35 @@ const ChatBot = () => {
                     borderRadius: '45px',
                     width: '100px',
                     height: '70px',
-                    cursor: 'pointer', 
+                    cursor: 'pointer',
                 }}
             >
-                <Typography
-                    variant="h6"
-                    color="#101828"
-                    fontWeight={600}
-                    sx={{ marginRight: '8px' }} 
-                >
-                    Ask
-                </Typography>
-                <Box
-                    component="img"
-                    src={avtar}
-                    alt="Avatar"
-                    sx={{
-                        height: '32px',
-                        width: '32px',
-                        borderRadius: '50%',
-                        objectFit: 'cover',
-                    }}
-                />
+
+                {showChatbot ? <CloseIcon /> :
+                    <>
+                        <Typography
+                            variant="h6"
+                            color="#101828"
+                            fontWeight={600}
+                            sx={{ marginRight: '8px' }}
+                        >
+                            Ask
+                        </Typography>
+                        <Box
+                            component="img"
+                            src={avtar}
+                            alt="Avatar"
+                            sx={{
+                                height: '32px',
+                                width: '32px',
+                                borderRadius: '50%',
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </>
+                }
+
             </Box>
-
-            {/* <IconButton
-                onClick={() => setShowChatbot(!showChatbot)}
-                sx={{
-                    position: "fixed",
-                    bottom: 30,
-                    right: 30,
-                    backgroundColor: "#724ae8",
-                    color: "white",
-                    "&:hover": { backgroundColor: "#5a3abc" },
-                }}
-            >
-                {showChatbot ? <CloseIcon /> : <ChatIcon />}
-            </IconButton> */}
-
-            {/* Chatbot window */}
             {showChatbot && (
                 <Box
                     sx={{
@@ -106,7 +96,7 @@ const ChatBot = () => {
                         right: 30,
                         width: 400,
                         height: 500,
-                        bgcolor: "white",
+                        background: "#D0CEE5CC",
                         borderRadius: 2,
                         boxShadow: 3,
                         display: "flex",
@@ -117,7 +107,7 @@ const ChatBot = () => {
                     <Box
                         sx={{
                             p: 2,
-                            bgcolor: "#724ae8",
+                            bgcolor: "#D0CEE5CC",
                             color: "white",
                             textAlign: "center",
                             borderTopLeftRadius: 8,
@@ -133,7 +123,7 @@ const ChatBot = () => {
                             flex: 1,
                             overflowY: "auto",
                             p: 2,
-                            bgcolor: "#f9f9f9",
+                            bgcolor: "#D0CEE5CC",
                         }}
                     >
                         {messages.map((msg, index) => (
