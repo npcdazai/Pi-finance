@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
     Box,
     IconButton,
-    TextField,
     Typography,
     Button,
     List,
@@ -10,18 +9,21 @@ import {
     ListItemText,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import ChatIcon from "@mui/icons-material/Chat";
 import CloseIcon from "@mui/icons-material/Close";
+import MaximizeIcon from "@mui/icons-material/Maximize";
+import Avatar from "@mui/material/Avatar";
+import TextField from "@mui/material/TextField";
 import avtar from "../../../public/images/logo/logo.png"
 
 const ChatBot = () => {
     const [showChatbot, setShowChatbot] = useState(false);
+    const [isMaximized, setIsMaximized] = useState(false);
     const [messages, setMessages] = useState([
         { text: "Hi there! How can I help you today?", sender: "bot" },
     ]);
     const [userMessage, setUserMessage] = useState("");
 
-    const handleSendMessage = async () => {
+    const handleSendMessage = () => {
         if (!userMessage.trim()) return;
 
         const newMessages = [
@@ -31,18 +33,54 @@ const ChatBot = () => {
         setMessages(newMessages);
         setUserMessage("");
 
-        // Simulate bot response after a delay
         setTimeout(() => {
-            setMessages([
-                ...newMessages,
-                { text: "I'm still learning to respond!", sender: "bot" },
+            setMessages([...
+                newMessages,
+            { text: "I'm still learning to respond!", sender: "bot" },
             ]);
         }, 1000);
     };
 
     return (
         <Box>
-            {/* Chatbot toggler */}
+            {/* Chatbot Toggle Button */}
+            {/* <Box
+                onClick={() => setShowChatbot(!showChatbot)}
+                sx={{
+                    background: "linear-gradient(90deg, #ADC5EA, #8BBCE8, #C8CDCE)",
+                    position: "fixed",
+                    bottom: 30,
+                    right: 30,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "10px 20px",
+                    borderRadius: "24px",
+                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+                    cursor: "pointer",
+                }}
+            >
+                {showChatbot ? (
+                    <CloseIcon />
+                ) : (
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1}
+                    >
+                        <Avatar
+                            sx={{ width: 32, height: 32 }}
+                            src="/path/to/avatar.png"
+                        />
+                        <Typography
+                            variant="subtitle1"
+                            sx={{ fontWeight: 500, color: "#101828" }}
+                        >
+                            Ask
+                        </Typography>
+                    </Box>
+                )}
+            </Box> */}
 
             <Box
                 onClick={() => setShowChatbot(!showChatbot)}
@@ -63,7 +101,19 @@ const ChatBot = () => {
                 }}
             >
 
-                {showChatbot ? <CloseIcon /> :
+                {showChatbot ?
+                    <>
+                        <CloseIcon />
+                        <Typography
+                            variant="h6"
+                            color="#101828"
+                            fontWeight={600}
+                            sx={{ marginRight: '8px' }}
+                        >
+                            Close
+                        </Typography>
+                    </>
+                    :
                     <>
                         <Typography
                             variant="h6"
@@ -88,58 +138,83 @@ const ChatBot = () => {
                 }
 
             </Box>
+
+            {/* Chatbot Panel */}
             {showChatbot && (
                 <Box
                     sx={{
                         position: "fixed",
-                        bottom: 90,
+                        bottom: 111,
                         right: 30,
                         width: 400,
-                        height: 500,
-                        background: "#D0CEE5CC",
-                        borderRadius: 2,
-                        boxShadow: 3,
+                        height: isMaximized ? "80vh" : "282px",
+                        borderRadius: "16px",
+                        overflow: "hidden",
+                        boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
+                        backgroundColor: "#F4F5F7",
                         display: "flex",
                         flexDirection: "column",
                     }}
                 >
-                    {/* Header */}
+                    {/* Chat Header */}
                     <Box
                         sx={{
-                            p: 2,
-                            bgcolor: "#D0CEE5CC",
-                            color: "white",
-                            textAlign: "center",
-                            borderTopLeftRadius: 8,
-                            borderTopRightRadius: 8,
+                            backgroundColor: "#D0CEE5",
+                            padding: "12px 16px",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                         }}
                     >
-                        <Typography variant="h6">Chatbot</Typography>
+                        <Typography
+                            variant="h6"
+                            sx={{ color: "#101828", fontWeight: 600 }}
+                        >
+                            Ask Pi
+                        </Typography>
+                        <IconButton
+                            onClick={() => setIsMaximized(!isMaximized)}
+                            size="small"
+                            sx={{ color: "#101828" }}
+                        >
+                            <MaximizeIcon />
+                        </IconButton>
                     </Box>
 
-                    {/* Chat messages */}
+                    {/* Messages */}
                     <List
                         sx={{
                             flex: 1,
+                            padding: "16px",
                             overflowY: "auto",
-                            p: 2,
-                            bgcolor: "#D0CEE5CC",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
                         }}
                     >
                         {messages.map((msg, index) => (
                             <ListItem
                                 key={index}
                                 sx={{
-                                    justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+                                    display: "flex",
+                                    justifyContent:
+                                        msg.sender === "user"
+                                            ? "flex-end"
+                                            : "flex-start",
                                 }}
                             >
                                 <ListItemText
                                     sx={{
-                                        bgcolor: msg.sender === "user" ? "#724ae8" : "#f2f2f2",
-                                        color: msg.sender === "user" ? "white" : "black",
-                                        p: 1.5,
-                                        borderRadius: 2,
-                                        maxWidth: "70%",
+                                        padding: "10px 16px",
+                                        borderRadius: "12px",
+                                        backgroundColor:
+                                            msg.sender === "user"
+                                                ? "#724AE8"
+                                                : "#E4E7EB",
+                                        color:
+                                            msg.sender === "user"
+                                                ? "white"
+                                                : "#101828",
                                     }}
                                     primary={msg.text}
                                 />
@@ -147,32 +222,38 @@ const ChatBot = () => {
                         ))}
                     </List>
 
-                    {/* Input */}
+                    {/* Input Field */}
                     <Box
                         sx={{
-                            p: 2,
-                            borderTop: "1px solid #ddd",
+                            padding: "16px",
                             display: "flex",
-                            alignItems: "center",
+                            gap: "8px",
                         }}
                     >
                         <TextField
                             fullWidth
                             value={userMessage}
                             onChange={(e) => setUserMessage(e.target.value)}
-                            placeholder="Enter a message..."
+                            placeholder="Ask anything related to money..."
+                            sx={{
+                                backgroundColor: "white",
+                                borderRadius: "8px",
+                            }}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter" && !e.shiftKey) {
-                                    e.preventDefault();
+                                if (e.key === "Enter") {
                                     handleSendMessage();
                                 }
                             }}
-                            sx={{ mr: 2 }}
                         />
                         <Button
                             variant="contained"
                             onClick={handleSendMessage}
-                            sx={{ bgcolor: "#724ae8", "&:hover": { bgcolor: "#5a3abc" } }}
+                            sx={{
+                                backgroundColor: "#724AE8",
+                                "&:hover": {
+                                    backgroundColor: "#5a3abc",
+                                },
+                            }}
                         >
                             <SendIcon />
                         </Button>
