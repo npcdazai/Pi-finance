@@ -5,15 +5,27 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import { HiMenuAlt4 } from 'react-icons/hi';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { styled } from '@mui/material/styles';
 import logo from '../../public/images/logo/logo.png';
+
+const drawerWidth = 240;
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: '#fff',
   padding: '0 2rem',
 }));
+
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -65,12 +77,60 @@ const LogoutIconStyled = styled(LogoutIcon)(({ theme }) => ({
 }));
 
 export default function Appbar() {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  const drawerContent = (
+    <Box
+      sx={{ width: drawerWidth }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem button>
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Settings" />
+        </ListItem>
+      </List>
+      <Divider />
+    </Box>
+  );
+
   return (
-    <Box sx={{ zIndex: "100", top: "0", position: "sticky" }} >
-      <StyledAppBar sx={{boxShadow:"none"}} >
+    <Box sx={{ zIndex: 100, top: 0, position: 'sticky' }}>
+      <StyledAppBar sx={{ boxShadow: 'none' }}>
         <StyledToolbar>
           <Box display="flex" flexDirection="row" alignItems="center">
-            <MenuButton size="large" edge="start" color="inherit" aria-label="menu">
+            <MenuButton
+              size="large"
+              edge="start"
+              aria-label="menu"
+              onClick={toggleDrawer(true)}
+            >
               <HiMenuAlt4 />
             </MenuButton>
             <LogoContainer>
@@ -91,6 +151,19 @@ export default function Appbar() {
           </LogoutButton>
         </StyledToolbar>
       </StyledAppBar>
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={toggleDrawer(false)}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
     </Box>
   );
 }
+
