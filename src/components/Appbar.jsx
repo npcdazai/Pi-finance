@@ -67,7 +67,7 @@ const LogoutIconStyled = styled(LogoutIcon)(({ theme }) => ({
 export default function Appbar() {
   return (
     <Box sx={{ zIndex: "100", top: "0", position: "sticky" }} >
-      <StyledAppBar>
+      <StyledAppBar sx={{boxShadow:"none"}} >
         <StyledToolbar>
           <Box display="flex" flexDirection="row" alignItems="center">
             <MenuButton size="large" edge="start" color="inherit" aria-label="menu">

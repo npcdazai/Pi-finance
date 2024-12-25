@@ -8,11 +8,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TaxCards from '../components/UI/TaxCards'
 import EmployeeDetails from '../components/UI/EmployeeDetails'
 import SalaryTable from '../components/SalaryDetails'
+import TaxDeclarations from '../components/taxDeclarations'
 
 const Home = () => {
     return (
         <Container maxWidth="lg" sx={{ mt: "4rem" }}>
-            <Box display="flex" flexDirection="column" gap={4} >
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }} >
                 <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", mt: "2rem", justifyContent: "space-between", width: "100%" }} >
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }} >
                         <Typography sx={{ color: "#101828", fontWeight: 600, fontSize: "30px" }} >Welcome back Abhijit, Talk to Pi to grow & save more money!</Typography>
@@ -49,7 +50,8 @@ const Home = () => {
                 </Box>
 
                 <EmployeeDetails />
-                <SalaryTable/>
+                <SalaryTable />
+                <TaxDeclarations/>
             </Box>
         </Container >
     )

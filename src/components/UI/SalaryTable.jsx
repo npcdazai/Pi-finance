@@ -22,7 +22,7 @@ const SalaryTable = () => {
                     <TableRow>
                         <TableCell>Salary Structure</TableCell>
                         {months.map((month, index) => (
-                            <TableCell key={index} align="center"> {month}</TableCell>
+                            <TableCell key={index} align="center">{month}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>

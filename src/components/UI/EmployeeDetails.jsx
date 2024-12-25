@@ -41,7 +41,7 @@ const EmployeeDetails = () => {
                     <Typography variant='h5' sx={{}} >Employee Details</Typography>
                     <Typography variant='caption' sx={{ color: "#667085" }} >View & Edit Employee Details</Typography>
                 </Box>
-                <Button onClick={toggleEditMode} variant="outlined" sx={{ height: "40px", width: "100px", border: "none", color: "#6941C6", }} startIcon={<EditIcon />}>
+                <Button onClick={toggleEditMode} variant="outlined" sx={{ height: "40px", width: "100px", border: "none", color: "#6941C6", textTransform:"capitalize" }} startIcon={<EditIcon />}>
                     {isEdit ? "Edit" : "Cancel"}
                 </Button>
             </Box>
