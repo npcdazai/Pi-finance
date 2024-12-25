@@ -1,13 +1,14 @@
+import { Box } from '@mui/material'
 import './App.css'
 import Appbar from './components/Appbar'
 import Home from './pages/Home'
 
 function App() {
   return (
-    <div>
+    <Box sx={{position:"relative"}} >
       <Appbar />
       <Home />
-    </div>
+    </Box>
   )
 }
 
