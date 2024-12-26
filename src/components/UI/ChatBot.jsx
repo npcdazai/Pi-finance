@@ -14,6 +14,8 @@ import MaximizeIcon from "@mui/icons-material/Maximize";
 import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import avtar from "../../../public/images/logo/logo.png"
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { FiMaximize2 } from "react-icons/fi";
 
 const ChatBot = () => {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -153,9 +155,11 @@ const ChatBot = () => {
                         borderRadius: "16px",
                         overflow: "hidden",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
-                        backgroundColor: "#F4F5F7",
+                        backgroundColor: "#d0cee5fa",
                         display: "flex",
                         flexDirection: "column",
+                        // p: 2,
+                        px:2
                     }}
                 >
                     {/* Chat Header */}
@@ -179,7 +183,7 @@ const ChatBot = () => {
                             size="small"
                             sx={{ color: "#101828" }}
                         >
-                            <MaximizeIcon />
+                            <FiMaximize2 />
                         </IconButton>
                     </Box>
 
@@ -192,6 +196,8 @@ const ChatBot = () => {
                             display: "flex",
                             flexDirection: "column",
                             gap: 1,
+                            border: "1px solid #0000001A",
+                            borderRadius: "16px"
                         }}
                     >
                         {messages.map((msg, index) => (
@@ -211,12 +217,15 @@ const ChatBot = () => {
                                         borderRadius: "12px",
                                         backgroundColor:
                                             msg.sender === "user"
-                                                ? "#724AE8"
-                                                : "#E4E7EB",
+                                                ? "#000000"
+                                                : "#D0CEE5CC",
                                         color:
                                             msg.sender === "user"
-                                                ? "white"
-                                                : "#101828",
+                                                ? "#fff"
+                                                : "#000",
+                                        border:
+                                            msg.sender === "user"
+                                                ? "none" : "1px solid #0000001A"
                                     }}
                                     primary={msg.text}
                                 />
@@ -238,7 +247,7 @@ const ChatBot = () => {
                             onChange={(e) => setUserMessage(e.target.value)}
                             placeholder="Ask anything related to money..."
                             sx={{
-                                backgroundColor: "white",
+                                backgroundColor: "#D2D1E6",
                                 borderRadius: "8px",
                             }}
                             onKeyDown={(e) => {
@@ -251,13 +260,16 @@ const ChatBot = () => {
                             variant="contained"
                             onClick={handleSendMessage}
                             sx={{
-                                backgroundColor: "#724AE8",
-                                "&:hover": {
-                                    backgroundColor: "#5a3abc",
-                                },
+                                backgroundColor: "#000000",
+                                width: "58px",
+                                height: "58px",
+                                borderRadius: "50%",
+                                // "&:hover": {
+                                //     backgroundColor: "#5a3abc",
+                                // },
                             }}
                         >
-                            <SendIcon />
+                            <ArrowForwardIcon />
                         </Button>
                     </Box>
                 </Box>
