@@ -1,30 +1,21 @@
-import { Box, Button, Card, Grid, Typography } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import { Box, Button, Card, Typography, Grid } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import UserProfile from './UserProfile';
 import { AppContext } from '../../context/AppContext';
 
-const info = [
-    { title: 'Designation', value: 'Product Designer' },
-    { title: 'Interest Income', value: '1,210' },
-    { title: 'Age', value: '27' },
-    { title: 'Rent', value: '₹32k' },
-    { title: 'House', value: 'Rented' },
-    { title: 'Company', value: 'IT' },
-    { title: 'Marital Status', value: 'Unmarried' },
-]
-
 const EmployeeDetails = () => {
     const [isEdit, setIsEdit] = useState(() => {
         const savedState = sessionStorage.getItem('isEdit');
-        return savedState !== null ? JSON.parse(savedState) : true;
+        return savedState !== null ? JSON.parse(savedState) : false;
     });
-    const userDatas = useContext(AppContext);
 
+    const { user } = useContext(AppContext); // Assuming `user` is part of the context
+    const userDetails = user?.details || []; // Default to an empty array if no user details
 
     const toggleEditMode = () => {
-        setIsEdit(prevState => {
-            const newState = !prevState;
+        setIsEdit((prev) => {
+            const newState = !prev;
             sessionStorage.setItem('isEdit', JSON.stringify(newState));
             return newState;
         });
@@ -35,70 +26,87 @@ const EmployeeDetails = () => {
     }, [isEdit]);
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }} >
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }} >
-                <Box display="flex" flexDirection="column" alignItems="flex-start" >
-                    <Typography variant='h5' sx={{}} >Employee Details</Typography>
-                    <Typography variant='caption' sx={{ color: "#667085" }} >View & Edit Employee Details</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 2 }}>
+            {/* Header */}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%",
+                }}
+            >
+                <Box>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Employee Details
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: "#667085" }}>
+                        View & Edit Employee Details
+                    </Typography>
                 </Box>
                 <Button
                     onClick={toggleEditMode}
                     variant="outlined"
                     sx={{
                         height: "40px",
-                        width: "100px",
-                        border: "none",
+                        border: "1px solid #6941C6",
                         color: "#6941C6",
                         textTransform: "capitalize",
                     }}
                     startIcon={<EditIcon />}
                 >
-                    {isEdit ? "Edit" : "Cancel"}
+                    {isEdit ? "Cancel" : "Edit"}
                 </Button>
             </Box>
-            {isEdit ? <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    padding: 2,
-                    border: '1px solid #e0e0e0',
-                    borderRadius: 2,
-                    boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#fff',
-                    flexWrap: 'wrap',
-                    gap: 2,
-                }}
-            >
-                {info.map((item, index) => (
-                    <Box
-                        key={index}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            flex: '1',
-                            // minWidth: '150px',
-                        }}
-                    >
-                        <Typography
-                            variant="h6"
-                            sx={{ fontWeight: 'bold', textAlign: 'center' }}
-                        >
-                            {item.value}
-                        </Typography>
-                        <Typography
-                            variant="subtitle2"
-                            color="textSecondary"
-                            sx={{ textAlign: 'center' }}
-                        >
-                            {item.title}
-                        </Typography>
-                    </Box>
-                ))}
-            </Box> : <UserProfile />}
-        </Box>
-    )
-}
 
-export default EmployeeDetails
+            {/* Content */}
+            {isEdit ? (
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: 2,
+                        border: "1px solid #e0e0e0",
+                        borderRadius: 2,
+                        padding: 2,
+                        backgroundColor: "#fff",
+                        boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)",
+                    }}
+                >
+                    {userDetails.map((item, index) => (
+                        <Card
+                            key={index}
+                            sx={{
+                                flex: "1 1 calc(33.333% - 16px)",
+                                minWidth: "150px",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                padding: 2,
+                                textAlign: "center",
+                                borderRadius: "12px",
+                                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                            }}
+                        >
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: "bold", marginBottom: 1 }}
+                            >
+                                {item.value}
+                            </Typography>
+                            <Typography variant="subtitle2" color="textSecondary">
+                                {item.title}
+                            </Typography>
+                        </Card>
+                    ))}
+                </Box>
+            ) : (
+                <UserProfile />
+            )}
+        </Box>
+    );
+};
+
+export default EmployeeDetails;
