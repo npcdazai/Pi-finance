@@ -1,7 +1,8 @@
 import { Box, Button, Card, Grid, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import UserProfile from './UserProfile';
+import { AppContext } from '../../context/AppContext';
 
 const info = [
     { title: 'Designation', value: 'Product Designer' },
@@ -18,6 +19,8 @@ const EmployeeDetails = () => {
         const savedState = sessionStorage.getItem('isEdit');
         return savedState !== null ? JSON.parse(savedState) : true;
     });
+    const userDatas = useContext(AppContext);
+
 
     const toggleEditMode = () => {
         setIsEdit(prevState => {
@@ -30,9 +33,6 @@ const EmployeeDetails = () => {
     useEffect(() => {
         sessionStorage.setItem('isEdit', JSON.stringify(isEdit));
     }, [isEdit]);
-
-
-    // console.log(toggleEditMode, "__________________")
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }} >

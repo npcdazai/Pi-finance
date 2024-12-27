@@ -3,6 +3,7 @@ import React from 'react'
 import SalaryTable from './UI/SalaryTable'
 
 const SalaryDetails = () => {
+
     return (
         <div>
             <Box sx={{ display: "flex", flexDirection: "column" , gap:2 }} >
