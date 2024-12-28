@@ -38,7 +38,9 @@ const Home = () => {
     }
 
     return (
-        <Container maxWidth="lg" sx={{ mt: "4rem" }}>
+        <Container maxWidth="lg"
+        // maxWidth={{ md: "lg", lg: "lg" }}
+            sx={{ mt: "4rem" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {/* Header */}
                 <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", mt: "2rem", justifyContent: "space-between", width: "100%" }}>
@@ -54,7 +56,7 @@ const Home = () => {
                 </Box>
 
                 {/* ProfileCard as Menu */}
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 14 }}>
                     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2 }}>
                         <Typography sx={{ color: "#000000B2", fontWeight: 500, fontSize: "16px" }}>
                             Select Employee
@@ -71,6 +73,7 @@ const Home = () => {
                                 borderRadius: "16px",
                                 cursor: "pointer",
                                 width: "100%",
+                                
                                 height: "100%",
                             }}
                             onClick={handleMenuOpen}

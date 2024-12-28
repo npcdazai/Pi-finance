@@ -7,15 +7,14 @@ import {
     List,
     ListItem,
     ListItemText,
+    TextField,
+    Avatar,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
-import MaximizeIcon from "@mui/icons-material/Maximize";
-import Avatar from "@mui/material/Avatar";
-import TextField from "@mui/material/TextField";
-import avtar from "../../../public/images/logo/logo.png"
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { FiMaximize2 } from "react-icons/fi";
+import avtar from "../../../public/images/logo/logo.png";
 
 const ChatBot = () => {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -24,68 +23,118 @@ const ChatBot = () => {
         { text: "Hi there! How can I help you today?", sender: "bot" },
     ]);
     const [userMessage, setUserMessage] = useState("");
+    const [conversationId, setConversationId] = useState(""); // To store the conversation ID from the backend
+    const [token, setToken] = useState(null); // To store the token
 
-    const handleSendMessage = () => {
-        if (!userMessage.trim()) return;
+    // Function to fetch token
+    const getToken = async () => {
+        if (token) return token; // Reuse token if already fetched
 
-        const newMessages = [
-            ...messages,
-            { text: userMessage, sender: "user" },
-        ];
-        setMessages(newMessages);
-        setUserMessage("");
+        const requestBody = {
+            hr_id: "E001", // Replace with actual ID if dynamic
+            user_info: {
+                first_name: "ABC",
+                last_name: "PQR",
+            },
+        };
 
-        setTimeout(() => {
-            setMessages([...
-                newMessages,
-            { text: "I'm still learning to respond!", sender: "bot" },
-            ]);
-        }, 1000);
+        try {
+            const response = await fetch("https://staging.getpi.in/backend/v1/hrms/hr/token", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data?.data?.data?.token) {
+                setToken(data.data.data.token); // Store the token
+                return data.data.data.token;
+            } else {
+                console.error("Failed to fetch token:", data?.message);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching token:", error);
+            return null;
+        }
     };
 
-    const vh = window.innerHeight;
+    // Function to send user message and fetch bot response
+    const handleSendMessage = async () => {
+        if (!userMessage.trim()) return;
+
+        // Update messages with user's input
+        const newMessages = [...messages, { text: userMessage, sender: "user" }];
+        setMessages(newMessages);
+
+        // Prepare request payload
+        const payload = {
+            chats: messages.map((msg) => ({
+                role: msg.sender === "user" ? "user" : "assistant",
+                content: msg.text,
+            })),
+            new_message: { role: "user", content: userMessage },
+            conversation_id: conversationId,
+        };
+
+        setUserMessage(""); // Clear input field
+
+        try {
+            // Fetch the token
+            const token = await getToken();
+            if (!token) {
+                console.error("Unable to fetch token");
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    { text: "Sorry, something went wrong. Please try again.", sender: "bot" },
+                ]);
+                return;
+            }
+
+            // Send message to chatbot API
+            const response = await fetch("https://staging.getpi.in/backend/v1/router/llm/send", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setConversationId(data.data.conversation_id); // Update conversation ID
+                const botMessage = data.data.new_message;
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    { text: botMessage.content, sender: "bot" },
+                ]);
+            } else {
+                console.error("Error from backend:", data.message);
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    { text: "Sorry, something went wrong. Please try again.", sender: "bot" },
+                ]);
+            }
+        } catch (error) {
+            console.error("Error sending message:", error);
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { text: "Network error. Please check your connection and try again.", sender: "bot" },
+            ]);
+        }
+    };
+
+    const vh = window.innerHeight; 
     const result = 711 - (0.8 * vh - 200);
+
     return (
         <Box>
             {/* Chatbot Toggle Button */}
-            {/* <Box
-                onClick={() => setShowChatbot(!showChatbot)}
-                sx={{
-                    background: "linear-gradient(90deg, #ADC5EA, #8BBCE8, #C8CDCE)",
-                    position: "fixed",
-                    bottom: 30,
-                    right: 30,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "10px 20px",
-                    borderRadius: "24px",
-                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-                    cursor: "pointer",
-                }}
-            >
-                {showChatbot ? (
-                    <CloseIcon />
-                ) : (
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        gap={1}
-                    >
-                        <Avatar
-                            sx={{ width: 32, height: 32 }}
-                            src="/path/to/avatar.png"
-                        />
-                        <Typography
-                            variant="subtitle1"
-                            sx={{ fontWeight: 500, color: "#101828" }}
-                        >
-                            Ask
-                        </Typography>
-                    </Box>
-                )}
-            </Box> */}
-
             <Box
                 onClick={() => setShowChatbot(!showChatbot)}
                 sx={{
@@ -104,43 +153,21 @@ const ChatBot = () => {
                     cursor: 'pointer',
                 }}
             >
-
-                {showChatbot ?
+                {showChatbot ? (
                     <>
                         <CloseIcon />
-                        <Typography
-                            variant="h6"
-                            color="#101828"
-                            fontWeight={600}
-                            sx={{ marginRight: '8px' }}
-                        >
+                        <Typography variant="h6" color="#101828" fontWeight={600} sx={{ marginRight: '8px' }}>
                             Close
                         </Typography>
                     </>
-                    :
+                ) : (
                     <>
-                        <Typography
-                            variant="h6"
-                            color="#101828"
-                            fontWeight={600}
-                            sx={{ marginRight: '8px' }}
-                        >
+                        <Typography variant="h6" color="#101828" fontWeight={600} sx={{ marginRight: '8px' }}>
                             Ask
                         </Typography>
-                        <Box
-                            component="img"
-                            src={avtar}
-                            alt="Avatar"
-                            sx={{
-                                height: '32px',
-                                width: '32px',
-                                borderRadius: '50%',
-                                objectFit: 'cover',
-                            }}
-                        />
+                        <Avatar src={avtar} alt="Avatar" sx={{ height: '32px', width: '32px', borderRadius: '50%' }} />
                     </>
-                }
-
+                )}
             </Box>
 
             {/* Chatbot Panel */}
@@ -151,15 +178,14 @@ const ChatBot = () => {
                         bottom: 111,
                         right: 30,
                         width: isMaximized ? "1280px" : 400,
-                        height: isMaximized ? result : "282px",
+                        height: isMaximized ? "auto" : "282px",
                         borderRadius: "16px",
                         overflow: "hidden",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
                         backgroundColor: "#d0cee5fa",
                         display: "flex",
                         flexDirection: "column",
-                        // p: 2,
-                        px:2
+                        px: 2,
                     }}
                 >
                     {/* Chat Header */}
@@ -172,17 +198,10 @@ const ChatBot = () => {
                             alignItems: "center",
                         }}
                     >
-                        <Typography
-                            variant="h6"
-                            sx={{ color: "#101828", fontWeight: 600 }}
-                        >
+                        <Typography variant="h6" sx={{ color: "#101828", fontWeight: 600 }}>
                             Ask Pi
                         </Typography>
-                        <IconButton
-                            onClick={() => setIsMaximized(!isMaximized)}
-                            size="small"
-                            sx={{ color: "#101828" }}
-                        >
+                        <IconButton onClick={() => setIsMaximized(!isMaximized)} size="small" sx={{ color: "#101828" }}>
                             <FiMaximize2 />
                         </IconButton>
                     </Box>
@@ -197,7 +216,7 @@ const ChatBot = () => {
                             flexDirection: "column",
                             gap: 1,
                             border: "1px solid #0000001A",
-                            borderRadius: "16px"
+                            borderRadius: "16px",
                         }}
                     >
                         {messages.map((msg, index) => (
@@ -205,27 +224,16 @@ const ChatBot = () => {
                                 key={index}
                                 sx={{
                                     display: "flex",
-                                    justifyContent:
-                                        msg.sender === "user"
-                                            ? "flex-end"
-                                            : "flex-start",
+                                    justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
                                 }}
                             >
                                 <ListItemText
                                     sx={{
                                         padding: "10px 16px",
                                         borderRadius: "12px",
-                                        backgroundColor:
-                                            msg.sender === "user"
-                                                ? "#000000"
-                                                : "#D0CEE5CC",
-                                        color:
-                                            msg.sender === "user"
-                                                ? "#fff"
-                                                : "#000",
-                                        border:
-                                            msg.sender === "user"
-                                                ? "none" : "1px solid #0000001A"
+                                        backgroundColor: msg.sender === "user" ? "#000000" : "#D0CEE5CC",
+                                        color: msg.sender === "user" ? "#fff" : "#000",
+                                        border: msg.sender === "user" ? "none" : "1px solid #0000001A",
                                     }}
                                     primary={msg.text}
                                 />
@@ -234,22 +242,13 @@ const ChatBot = () => {
                     </List>
 
                     {/* Input Field */}
-                    <Box
-                        sx={{
-                            padding: "16px",
-                            display: "flex",
-                            gap: "8px",
-                        }}
-                    >
+                    <Box sx={{ padding: "16px", display: "flex", gap: "8px" }}>
                         <TextField
                             fullWidth
                             value={userMessage}
                             onChange={(e) => setUserMessage(e.target.value)}
                             placeholder="Ask anything related to money..."
-                            sx={{
-                                backgroundColor: "#D2D1E6",
-                                borderRadius: "8px",
-                            }}
+                            sx={{ backgroundColor: "#D2D1E6", borderRadius: "8px" }}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") {
                                     handleSendMessage();
@@ -264,18 +263,15 @@ const ChatBot = () => {
                                 width: "58px",
                                 height: "58px",
                                 borderRadius: "50%",
-                                // "&:hover": {
-                                //     backgroundColor: "#5a3abc",
-                                // },
                             }}
                         >
                             <ArrowForwardIcon />
                         </Button>
                     </Box>
-                </Box>
-            )}
-        </Box>
-    );
-};
-
+                    </Box>
+                    )}
+                    </Box>
+                );
+            };
+            
 export default ChatBot;

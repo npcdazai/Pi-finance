@@ -10,8 +10,8 @@ const EmployeeDetails = () => {
         return savedState !== null ? JSON.parse(savedState) : false;
     });
 
-    const { user } = useContext(AppContext); // Assuming `user` is part of the context
-    const userDetails = user?.details || []; // Default to an empty array if no user details
+    const { user } = useContext(AppContext); 
+    const userDetails = user?.details || []; 
 
     const toggleEditMode = () => {
         setIsEdit((prev) => {
