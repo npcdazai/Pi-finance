@@ -63,51 +63,56 @@ const EmployeeDetails = () => {
                     }}
                     startIcon={<EditIcon />}
                 >
-                    {isEdit ? "Edit" : "Cancel"}
+                    {isEdit ? "Cancel" : "Edit"}
                 </Button>
             </Box>
-            {isEdit ? <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    padding: 2,
-                    border: '1px solid #e0e0e0',
-                    borderRadius: 2,
-                    boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#fff',
-                    flexWrap: 'wrap',
-                    gap: 2,
-                }}
-            >
-                {info.map((item, index) => (
-                    <Box
-                        key={index}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            flex: '1',
-                            // minWidth: '150px',
-                        }}
-                    >
-                        <Typography
-                            variant="h6"
-                            sx={{ fontWeight: 'bold', textAlign: 'center' }}
+            {isEdit ?
+                <UserProfile />
+                :
+
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        padding: 2,
+                        border: '1px solid #e0e0e0',
+                        borderRadius: 2,
+                        boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.2)',
+                        backgroundColor: '#fff',
+                        flexWrap: 'wrap',
+                        gap: 2,
+                    }}
+                >
+                    {info.map((item, index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                flex: '1',
+                                // minWidth: '150px',
+                            }}
                         >
-                            {item.value}
-                            {/* {selectedEmployee.job_title} */}
-                        </Typography>
-                        <Typography
-                            variant="subtitle2"
-                            color="textSecondary"
-                            sx={{ textAlign: 'center' }}
-                        >
-                            {item.title}
-                        </Typography>
-                    </Box>
-                ))}
-            </Box> : <UserProfile />}
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 'bold', textAlign: 'center' }}
+                            >
+                                {item.value}
+                                {/* {selectedEmployee.job_title} */}
+                            </Typography>
+                            <Typography
+                                variant="subtitle2"
+                                color="textSecondary"
+                                sx={{ textAlign: 'center' }}
+                            >
+                                {item.title}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Box>
+            }
         </Box>
     )
 }
