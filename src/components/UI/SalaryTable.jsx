@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { AppContext } from "../../context/AppContext";
 
+
 const salaryData = [
     { structure: "Basic Salary", values: [20000, 20000, 20000, 20000, 20000, 20000, 20000] },
     { structure: "HRA", values: [10000, 10000, 10000, 10000, 10000, 10000, 10000] },
@@ -14,6 +15,7 @@ const salaryData = [
 ];
 
 const months = ["Mar 2024", "Apr 2024", "May 2024", "Jun 2024", "Jul 2024", "Aug 2024", "Sep 2024"];
+
 
 const SalaryTable = () => {
     const { userDatas } = useContext(AppContext)
