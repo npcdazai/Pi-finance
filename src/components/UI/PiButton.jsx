@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button } from '@mui/material';
 import { styled, keyframes } from '@mui/system';
+import { AppContext } from '../../context/AppContext';
 
 // Keyframe animation for hover effect
 const hoverAnimation = keyframes`
@@ -58,7 +59,7 @@ const GradientButton = styled(Button)(({ theme }) => ({
         transform: 'rotate(116deg) translateY(10px)', // Second line offset
         zIndex: '1',
         pointerEvents: 'none',
-        opacity:0.8
+        opacity: 0.8
     },
     '& span': {
         position: 'relative',
@@ -67,9 +68,10 @@ const GradientButton = styled(Button)(({ theme }) => ({
 }));
 
 function PiButton({ text }) {
+    const { setShowChatbot, showChatbot } = useContext(AppContext)
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <GradientButton>
+            <GradientButton onClick={() => setShowChatbot(!showChatbot)} >
                 <span>{text}</span>
             </GradientButton>
         </div>
