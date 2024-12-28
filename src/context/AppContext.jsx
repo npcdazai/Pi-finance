@@ -7,6 +7,7 @@ export const AppProvider = ({ children }) => {
     const [userDatas, setUserData] = useState(null);
     const [userTax, setUserTax] = useState([])
     const [isError, setIsError] = useState(false);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const apihost = "https://staging.getpi.in/backend/v1/hrms/hr";
@@ -37,11 +38,18 @@ export const AppProvider = ({ children }) => {
         getUser();
     }, []);
 
-
-    console
+    const updateEmployeeDetails = (updatedDetails) => {
+        setSelectedEmployee((prev) => ({
+            ...prev,
+            ...updatedDetails,
+        }));
+    };
 
     return (
-        <AppContext.Provider value={{ userDatas, isLoading, isError }}>
+        <AppContext.Provider value={{
+            userDatas, isLoading, isError, selectedEmployee,
+            setSelectedEmployee,updateEmployeeDetails,
+        }}>
             {children}
         </AppContext.Provider>
     );

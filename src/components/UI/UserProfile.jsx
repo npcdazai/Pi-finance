@@ -1,7 +1,7 @@
 import  { useState } from 'react';
 import { Box, TextField, Typography, Button } from '@mui/material';
 
-const UserProfile = () => {
+const   UserProfile = () => {
 
     const [formData, setFormData] = useState({
         designation: 'Product Designer',

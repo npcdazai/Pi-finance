@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Box, Card, Container, Typography, Menu, MenuItem, IconButton } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { Box, Card, Typography, Menu, MenuItem, IconButton } from '@mui/material';
 import PiButton from '../components/UI/PiButton';
 import TaxCards from '../components/UI/TaxCards';
 import EmployeeDetails from '../components/UI/EmployeeDetails';
@@ -9,16 +9,15 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { AppContext } from '../context/AppContext';
 
 const Home = () => {
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    // const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const { userDatas } = useContext(AppContext); // Assuming userDatas is fetched and stored here
+    const { userDatas ,selectedEmployee, setSelectedEmployee } = useContext(AppContext);
 
-    // Select the first employee by default if no one is selected
-    React.useEffect(() => {
-        if (userDatas && userDatas.length > 0) {
+    useEffect(() => {
+        if (userDatas?.length > 0) {
             setSelectedEmployee(userDatas[0]);
         }
-    }, [userDatas]);
+    },[userDatas, selectedEmployee, setSelectedEmployee]);
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -34,103 +33,105 @@ const Home = () => {
     };
 
     if (!selectedEmployee) {
-        return <div>Loading...</div>; // Ensure the component doesn’t break if there's no selected employee
+        return (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+                <Typography variant="h6">Loading...</Typography>
+            </Box>
+        );
     }
 
+    const renderMenuItem = (employee) => (
+        <MenuItem key={employee.id} onClick={() => handleEmployeeSelect(employee)}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                    component="img"
+                    src={employee.avatar}
+                    alt={employee.name}
+                    sx={{ height: 40, width: 40, borderRadius: '50%' }}
+                />
+                <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>{employee.name}</Typography>
+            </Box>
+        </MenuItem>
+    );
+
     return (
-        <Container maxWidth="lg"
-        // maxWidth={{ md: "lg", lg: "lg" }}
-            sx={{ mt: "4rem" }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        <Box
+            sx={{
+                mt: 8,
+                px: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
                 {/* Header */}
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", mt: "2rem", justifyContent: "space-between", width: "100%" }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                        <Typography sx={{ color: "#101828", fontWeight: 600, fontSize: "30px" }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        mt: '2rem',
+                    }}
+                >
+                    <Box>
+                        <Typography sx={{ fontWeight: 600, fontSize: 30, color: '#101828' }}>
                             Welcome back {selectedEmployee.name}, Talk to Pi to grow & save more money!
                         </Typography>
-                        <Typography sx={{ color: "#667085", fontSize: "16px", fontWeight: 400 }}>
+                        <Typography sx={{ fontSize: 16, fontWeight: 400, color: '#667085' }}>
                             Track, manage and forecast your customers and orders.
                         </Typography>
                     </Box>
-                    <PiButton text={"Talk to Pi"} />
+                    <PiButton text="Talk to Pi" />
                 </Box>
 
-                {/* ProfileCard as Menu */}
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 14 }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2 }}>
-                        <Typography sx={{ color: "#000000B2", fontWeight: 500, fontSize: "16px" }}>
+                {/* Profile Card with Menu */}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 4,
+                    }}
+                >
+                    <Box>
+                        <Typography sx={{ fontSize: 16, fontWeight: 500, color: '#000000B2' }}>
                             Select Employee
                         </Typography>
                         <Card
                             sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                boxShadow: 1,
+                                display: 'flex',
+                                alignItems: 'center',
                                 p: 1,
                                 gap: 2,
-                                borderRadius: "16px",
-                                cursor: "pointer",
-                                width: "100%",
-                                
-                                height: "100%",
+                                boxShadow: 1,
+                                borderRadius: 2,
+                                cursor: 'pointer',
                             }}
                             onClick={handleMenuOpen}
                         >
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                                <Box
-                                    component="img"
-                                    src={selectedEmployee.avatar}
-                                    height="72px"
-                                    width="72px"
-                                    borderRadius="50%"
-                                    alt={selectedEmployee.name}
-                                />
-                                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                                    <Typography sx={{ fontSize: "16px", color: "#000000", fontWeight: 500 }}>
-                                        {selectedEmployee.name}
-                                    </Typography>
-                                    <Box sx={{ display: "flex", flexDirection: "row", gap: "2px", alignItems: "center" }}>
-                                        <span style={{ fontSize: "14px", color: "#000000", fontWeight: 400 }}>
-                                            {selectedEmployee.location}
-                                        </span> .
-                                        <span style={{ fontSize: "14px", color: "#000000", fontWeight: 400 }}>
-                                            Salary: {selectedEmployee.salary}
-                                        </span>
-                                    </Box>
-                                </Box>
-                                <IconButton>
-                                    <KeyboardArrowDownIcon />
-                                </IconButton>
+                            <Box
+                                component="img"
+                                src={selectedEmployee.avatar}
+                                alt={selectedEmployee.name}
+                                sx={{ height: 72, width: 72, borderRadius: '50%' }}
+                            />
+                            <Box sx={{ flex: 1 }}>
+                                <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEmployee.name}</Typography>
+                                <Typography sx={{ fontSize: 14, color: '#000000' }}>
+                                    {selectedEmployee.location} • Salary: {selectedEmployee.salary}
+                                </Typography>
                             </Box>
+                            <IconButton>
+                                <KeyboardArrowDownIcon />
+                            </IconButton>
                         </Card>
 
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={Boolean(anchorEl)}
-                            onClose={handleMenuClose}
-                        >
-                            {userDatas.map((employee) => (
-                                <MenuItem
-                                    key={employee.id}
-                                    onClick={() => handleEmployeeSelect(employee)}
-                                >
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                                        <Box
-                                            component="img"
-                                            src={employee.avatar}
-                                            height="40px"
-                                            width="40px"
-                                            borderRadius="50%"
-                                            alt={employee.name}
-                                        />
-                                        <Typography sx={{ fontSize: "14px", color: "#000000", fontWeight: 500 }}>
-                                            {employee.name}
-                                        </Typography>
-                                    </Box>
-                                </MenuItem>
-                            ))}
+                        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+                            {userDatas.map(renderMenuItem)}
                         </Menu>
                     </Box>
 
@@ -142,7 +143,7 @@ const Home = () => {
                 <SalaryTable employee={selectedEmployee} />
                 <TaxDeclarations employee={selectedEmployee} />
             </Box>
-        </Container>
+        </Box>
     );
 };
 
