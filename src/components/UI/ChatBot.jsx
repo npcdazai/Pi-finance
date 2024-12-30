@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
     Box,
     IconButton,
@@ -30,6 +30,31 @@ const ChatBot = () => {
         handleSendMessage,
     } = useContext(AppContext);
 
+    const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+    const messagesEndRef = useRef(null);
+
+    // Auto-scroll to the bottom when messages change
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
+
+    // Simulate sending a response after a delay
+    const handleSendMessageWithDelay = () => {
+        handleSendMessage();
+        setIsLoading(true); // Show "thinking" message
+
+        setTimeout(() => {
+            // Simulate bot response
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { sender: "bot", text: "Let me think..." }, // You can replace this with actual bot logic
+            ]);
+            setIsLoading(false); // Hide "thinking" message after delay
+        }, 2000); // Simulate a 2-second delay for bot response
+    };
+
     return (
         <Box>
             <Box
@@ -48,6 +73,7 @@ const ChatBot = () => {
                     width: '100px',
                     height: '70px',
                     cursor: 'pointer',
+                    zIndex:1
                 }}
             >
                 {showChatbot ? (
@@ -82,6 +108,7 @@ const ChatBot = () => {
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
                         backgroundColor: "#d0cee5fa",
                         display: "flex",
+                        zIndex: 2,
                         flexDirection: "column",
                         px: 2,
                     }}
@@ -115,6 +142,7 @@ const ChatBot = () => {
                             gap: 1,
                             border: "1px solid #0000001A",
                             borderRadius: "16px",
+                            position: "relative",
                         }}
                     >
                         {messages.map((msg, index) => (
@@ -137,6 +165,23 @@ const ChatBot = () => {
                                 />
                             </ListItem>
                         ))}
+                        {/* Show "typing" message if bot is processing */}
+                        {isLoading && (
+                            <ListItem sx={{ display: "flex", justifyContent: "flex-start" }}>
+                                <ListItemText
+                                    sx={{
+                                        padding: "10px 16px",
+                                        borderRadius: "12px",
+                                        backgroundColor: "#D0CEE5CC",
+                                        color: "#000",
+                                        border: "1px solid #0000001A",
+                                    }}
+                                    primary="Bot is typing..."
+                                />
+                            </ListItem>
+                        )}
+                        {/* This empty div will push the scroll to the bottom */}
+                        <div ref={messagesEndRef} />
                     </List>
 
                     {/* Input Field */}
@@ -146,16 +191,16 @@ const ChatBot = () => {
                             value={userMessage}
                             onChange={(e) => setUserMessage(e.target.value)}
                             placeholder="Ask anything related to money..."
-                            sx={{ backgroundColor: "#D2D1E6", borderRadius: "8px" }}
+                            sx={{ backgroundColor: "#D2D1E6", borderRadius: "8px", zIndex: 1, }}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") {
-                                    handleSendMessage();
+                                    handleSendMessageWithDelay(); // Call the new function with delay
                                 }
                             }}
                         />
                         <Button
                             variant="contained"
-                            onClick={handleSendMessage}
+                            onClick={handleSendMessageWithDelay} // Call the new function with delay
                             sx={{
                                 backgroundColor: "#000000",
                                 width: "58px",

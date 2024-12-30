@@ -8,7 +8,7 @@ const TaxTabs = () => {
     setSelectedTab(newValue);
   };
   return (
-    <Box sx={{ width: "100%", margin: "auto", marginTop: 4 }}>
+    <Box sx={{ width: "100%", margin: "auto", marginTop: 4, position: "relative", zIndex: 1 }}>
       <Tabs
         value={selectedTab}
         onChange={handleChange}
