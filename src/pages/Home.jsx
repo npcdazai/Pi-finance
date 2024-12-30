@@ -8,7 +8,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import TaxCards from '../components/UI/TaxCards'
 import EmployeeDetails from '../components/UI/EmployeeDetails'
 import SalaryTable from '../components/SalaryDetails'
-import TaxDeclarations from '../components/taxDeclarations'
+import TaxDeclarations from '../components/TaxDeclarations'
 
 const Home = () => {
     return (
