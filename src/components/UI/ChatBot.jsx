@@ -30,29 +30,27 @@ const ChatBot = () => {
         handleSendMessage,
     } = useContext(AppContext);
 
-    const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+    const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // Auto-scroll to the bottom when messages change
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
 
-    // Simulate sending a response after a delay
     const handleSendMessageWithDelay = () => {
         handleSendMessage();
-        setIsLoading(true); // Show "thinking" message
+        setIsLoading(true);
 
         setTimeout(() => {
             // Simulate bot response
             setMessages((prevMessages) => [
                 ...prevMessages,
-                { sender: "bot", text: "Let me think..." }, // You can replace this with actual bot logic
+                { sender: "bot", text: "Let me think..." },
             ]);
-            setIsLoading(false); // Hide "thinking" message after delay
-        }, 2000); // Simulate a 2-second delay for bot response
+            setIsLoading(false);
+        }, 2000);
     };
 
     return (
@@ -73,7 +71,7 @@ const ChatBot = () => {
                     width: '100px',
                     height: '70px',
                     cursor: 'pointer',
-                    zIndex:1
+                    zIndex: 1
                 }}
             >
                 {showChatbot ? (
@@ -180,7 +178,6 @@ const ChatBot = () => {
                                 />
                             </ListItem>
                         )}
-                        {/* This empty div will push the scroll to the bottom */}
                         <div ref={messagesEndRef} />
                     </List>
 
