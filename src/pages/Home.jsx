@@ -4,8 +4,9 @@ import PiButton from '../components/UI/PiButton';
 import TaxCards from '../components/UI/TaxCards';
 import EmployeeDetails from '../components/UI/EmployeeDetails';
 import SalaryTable from '../components/SalaryDetails';
-import TaxDeclarations from '../components/taxDeclarations';
+import TaxDeclarations from '../components/TaxDeclarations';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import pfp from '../../public/images/Avtar/avtar.png';
 import { AppContext } from '../context/AppContext';
 
 const Home = () => {
@@ -45,7 +46,7 @@ const Home = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Box
                     component="img"
-                    src={employee.avatar}
+                    src={employee.avatar || pfp}
                     alt={employee.name}
                     sx={{ height: 40, width: 40, borderRadius: '50%' }}
                 />
@@ -115,7 +116,7 @@ const Home = () => {
                         >
                             <Box
                                 component="img"
-                                src={selectedEmployee.avatar}
+                                src={selectedEmployee.avatar || pfp}
                                 alt={selectedEmployee.name}
                                 sx={{ height: 72, width: 72, borderRadius: '50%' }}
                             />
