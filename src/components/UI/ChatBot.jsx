@@ -14,7 +14,7 @@ import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { FiMaximize2 } from "react-icons/fi";
-import avtar from "../../../public/images/logo/logo.png";
+import avtar from "../../../public/images/logo/piLogo.png";
 import { AppContext } from "../../context/AppContext";
 
 const ChatBot = () => {

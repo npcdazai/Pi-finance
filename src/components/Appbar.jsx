@@ -17,7 +17,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { styled } from '@mui/material/styles';
-import logo from '../../public/images/logo/logo.png';
+import logo from '../../public/images/logo/piLogo.png';
 
 const drawerWidth = 240;
 

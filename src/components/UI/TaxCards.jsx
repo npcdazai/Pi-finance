@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Card, Typography } from '@mui/material';
-import pfp from '../../../public/images/logo/logo.png';
+import pfp from '../../../public/images/logo/piLogo.png';
 export default function TaxCards() {
     return (
         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }} >

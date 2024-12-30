@@ -12,13 +12,13 @@ import { AppContext } from '../context/AppContext';
 const Home = () => {
     // const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const { userDatas ,selectedEmployee, setSelectedEmployee } = useContext(AppContext);
+    const { userDatas, selectedEmployee, setSelectedEmployee } = useContext(AppContext);
 
     useEffect(() => {
         if (userDatas?.length > 0) {
             setSelectedEmployee(userDatas[0]);
         }
-    },[userDatas, selectedEmployee, setSelectedEmployee]);
+    }, [userDatas, selectedEmployee, setSelectedEmployee]);
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
