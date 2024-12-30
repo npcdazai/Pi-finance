@@ -16,8 +16,8 @@ const TaxTabs = () => {
           style: {
             backgroundColor: "#A55EEC",
             height: "8px",
-            borderTopRightRadius:"18px",
-            borderTopLeftRadius:"18px"
+            borderTopRightRadius: "18px",
+            borderTopLeftRadius: "18px"
           },
         }}
         textColor="inherit"
@@ -90,7 +90,7 @@ const TaxTabs = () => {
           </Grid>
         </Grid>
         <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
-          <Button variant="contained" sx={{bgcolor:"#9747FF" , color:"#fff" , borderRadius:"58px", textTransform:"capitalize"}} >
+          <Button variant="contained" sx={{ bgcolor: "#9747FF", color: "#fff", borderRadius: "58px", textTransform: "capitalize" }} >
             Save & Next
           </Button>
         </Box>

@@ -79,10 +79,10 @@ export default function TaxCards() {
                         backgroundColor: 'rgba(255, 255, 255, 0.3)',
                         borderRadius: '24px',
                         padding: '4px',
-                        paddingX:"8px",
+                        paddingX: "8px",
                         // marginBottom: '12px',
                         width: 'fit-content',
-                        height:"28px"
+                        height: "28px"
                     }}
                 >
                     <img src={pfp} alt="Efficient" style={{ width: '24px', height: '24px' }} />
@@ -94,7 +94,7 @@ export default function TaxCards() {
                     82%
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                Tax Score
+                    Tax Score
                 </Typography>
             </Box>
 
