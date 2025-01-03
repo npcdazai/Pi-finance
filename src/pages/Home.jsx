@@ -47,15 +47,19 @@ const Home = () => {
             key={employee.id}
             onClick={() => handleEmployeeSelect(employee)}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 1}}>
                 <Box
                     component="img"
                     src={employee.avatar || pfp}
                     alt={employee.name}
-                    sx={{ height: 40, width: 40, borderRadius: '50%' }}
+                    sx={{ height: 40, width: 40, borderRadius: '50%', }}
                 />
-                <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
+                {/* <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
                     {employee.name}
+                </Typography> */}
+                <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{employee.name}</Typography>
+                <Typography sx={{ fontSize: 14, color: '#000000' }}>
+                    Loaction : {employee.location} • Emp No: {employee.employee_id}
                 </Typography>
             </Box>
         </MenuItem>

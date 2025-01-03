@@ -7,11 +7,13 @@ import { AppContext } from '../../context/AppContext';
 
 
 const EmployeeDetails = () => {
-    const { selectedEmployee, updateEmployeeDetails } = useContext(AppContext); 
+    const { selectedEmployee, updateEmployeeDetails, userDatas } = useContext(AppContext);
     const [isEdit, setIsEdit] = useState(() => {
         const savedState = sessionStorage.getItem('isEdit');
         return savedState !== null ? JSON.parse(savedState) : false;
     });
+
+    console.log(selectedEmployee, "__________________")
 
     const [formData, setFormData] = useState(selectedEmployee || {});
 
@@ -23,25 +25,23 @@ const EmployeeDetails = () => {
         });
     };
 
-    const handleChange = (key, value) => {
-        setFormData((prev) => ({ ...prev, [key]: value }));
-    };
-
-    const handleSave = () => {
-        updateEmployeeDetails(formData);
-        toggleEditMode();
-    };
-
-
-    const info = [
-        { title: 'Designation', value: selectedEmployee.job_title },
-        { title: 'Interest Income', value: '1,210' },
-        { title: 'Age', value: selectedEmployee.age },
-        { title: 'Rent', value: '₹32k' },
-        { title: 'House', value: 'Rented' },
-        { title: 'Company', value: 'IT' },
-        { title: 'Marital Status', value: selectedEmployee.marital_status },
-    ]
+    const InfoBox = ({ title, subtitle }) => (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                flex: 1,
+            }}
+        >
+            <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                {title}
+            </Typography>
+            <Typography variant="subtitle2" color="textSecondary" sx={{ textAlign: 'center' }}>
+                {subtitle}
+            </Typography>
+        </Box>
+    );
 
 
     return (
@@ -84,33 +84,19 @@ const EmployeeDetails = () => {
                         gap: 2,
                     }}
                 >
-                    {info.map((item, index) => (
-                        <Box
-                            key={index}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                flex: '1',
-                                // minWidth: '150px',
-                            }}
-                        >
-                            <Typography
-                                variant="h6"
-                                sx={{ fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                {item.value}
-                                {/* {selectedEmployee.job_title} */}
-                            </Typography>
-                            <Typography
-                                variant="subtitle2"
-                                color="textSecondary"
-                                sx={{ textAlign: 'center' }}
-                            >
-                                {item.title}
-                            </Typography>
-                        </Box>
-                    ))}
+                    {userDatas.map((val) => {
+                        return (
+                            <Box key={val.employee_id} sx={{ display: "flex", gap: 3 , width:"100%"}} >
+                                <InfoBox title={val.job_title} subtitle="Designation" />
+                                <InfoBox title="1,210" subtitle="Interest Income" />
+                                <InfoBox title={val.age} subtitle="Age" />
+                                <InfoBox title="₹32k" subtitle="Rent" />
+                                <InfoBox title="Rented" subtitle="House" />
+                                <InfoBox title="IT" subtitle="Company" />
+                                <InfoBox title={val.marital_status} subtitle="Marital Status" />
+                            </Box>
+                        )
+                    })}
                 </Box>
             }
         </Box>
