@@ -17,6 +17,8 @@ export const AppProvider = ({ children }) => {
     const [userMessage, setUserMessage] = useState("");
     const [conversationId, setConversationId] = useState("");
     const [token, setToken] = useState(null);
+    const [getusers, setUsers] = useState([]);
+    const [userLoading, setUserLoading] = useState(true)
 
     // Fetch token function
     const getToken = async () => {
@@ -116,13 +118,13 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const apihost = "https://staging.getpi.in/backend/v1/hrms/hr";
+    const apihost = "https://staging.getpi.in/backend/v1/hrms/hr/";
 
-    const getUser = async () => {
+    const getUser = async (id) => {
         setIsLoading(true);
         setIsError(false);
         try {
-            const response = await axios.get(`${apihost}/users/E001`);
+            const response = await axios.get(`${apihost}/users/${id}`);
 
 
             if (response.status === 200) {
@@ -140,9 +142,24 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    const getUsers = async () => {
+        try {
+            const response = await axios.get("https://staging.getpi.in/backend/v1/hrms/hr/user_list");
+            const res = response?.status === 200 ? response.data.data.user_data : undefined;
+            res ? console.log(res) : console.error('error');
+            setUsers(res);
+        } catch (er) {
+            console.error(er);
+        } finally {
+            setUserLoading(false);
+        }
+    }
+
+
     useEffect(() => {
-        getUser();
-    }, []);
+        getUser(selectedEmployee?.employee_id);
+        getUsers();
+    }, [selectedEmployee?.employee_id]);
 
     const updateEmployeeDetails = (updatedDetails) => {
         setSelectedEmployee((prev) => ({
@@ -150,6 +167,8 @@ export const AppProvider = ({ children }) => {
             ...updatedDetails,
         }));
     };
+
+    // console.log("____________",users,"_________________")
 
     return (
         <AppContext.Provider value={{
@@ -163,6 +182,7 @@ export const AppProvider = ({ children }) => {
             userMessage,
             setUserMessage,
             handleSendMessage,
+            getusers,
         }}>
             {children}
         </AppContext.Provider>

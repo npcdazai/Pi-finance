@@ -10,15 +10,16 @@ import pfp from '../../public/images/Avtar/avtar.png';
 import { AppContext } from '../context/AppContext';
 
 const Home = () => {
-    // const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
-    const { userDatas, selectedEmployee, setSelectedEmployee } = useContext(AppContext);
+    const { userDatas, selectedEmployee, setSelectedEmployee, getusers } = useContext(AppContext);
+
 
     useEffect(() => {
-        if (userDatas?.length > 0) {
-            setSelectedEmployee(userDatas[0]);
+        if (getusers?.length > 0 && !selectedEmployee) {
+            setSelectedEmployee(getusers[0]);
         }
-    }, [userDatas, selectedEmployee, setSelectedEmployee]);
+    }, [getusers, selectedEmployee]);
+
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -42,7 +43,10 @@ const Home = () => {
     }
 
     const renderMenuItem = (employee) => (
-        <MenuItem key={employee.id} onClick={() => handleEmployeeSelect(employee)}>
+        <MenuItem
+            key={employee.id}
+            onClick={() => handleEmployeeSelect(employee)}
+        >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Box
                     component="img"
@@ -50,7 +54,9 @@ const Home = () => {
                     alt={employee.name}
                     sx={{ height: 40, width: 40, borderRadius: '50%' }}
                 />
-                <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>{employee.name}</Typography>
+                <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
+                    {employee.name}
+                </Typography>
             </Box>
         </MenuItem>
     );
@@ -67,7 +73,6 @@ const Home = () => {
             }}
         >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
-                {/* Header */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -88,7 +93,6 @@ const Home = () => {
                     <PiButton text="Talk to Pi" />
                 </Box>
 
-                {/* Profile Card with Menu */}
                 <Box
                     sx={{
                         display: 'flex',
@@ -123,7 +127,7 @@ const Home = () => {
                             <Box sx={{ flex: 1 }}>
                                 <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEmployee.name}</Typography>
                                 <Typography sx={{ fontSize: 14, color: '#000000' }}>
-                                    {selectedEmployee.location} • Salary: {selectedEmployee.salary}
+                                    Loaction : {selectedEmployee.location} • Emp No: {selectedEmployee.employee_id}
                                 </Typography>
                             </Box>
                             <IconButton>
@@ -132,14 +136,13 @@ const Home = () => {
                         </Card>
 
                         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-                            {userDatas.map(renderMenuItem)}
+                            {getusers.map(renderMenuItem)}
                         </Menu>
                     </Box>
 
                     <TaxCards employee={selectedEmployee} />
                 </Box>
 
-                {/* Other Components */}
                 <EmployeeDetails employee={selectedEmployee} />
                 <SalaryTable employee={selectedEmployee} />
                 <TaxDeclarations employee={selectedEmployee} />

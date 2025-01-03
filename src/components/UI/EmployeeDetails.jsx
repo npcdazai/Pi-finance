@@ -7,7 +7,7 @@ import { AppContext } from '../../context/AppContext';
 
 
 const EmployeeDetails = () => {
-    const { selectedEmployee, updateEmployeeDetails } = useContext(AppContext); // Use context for employee data
+    const { selectedEmployee, updateEmployeeDetails } = useContext(AppContext); 
     const [isEdit, setIsEdit] = useState(() => {
         const savedState = sessionStorage.getItem('isEdit');
         return savedState !== null ? JSON.parse(savedState) : false;
