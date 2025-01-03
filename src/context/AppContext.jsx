@@ -18,7 +18,8 @@ export const AppProvider = ({ children }) => {
     const [conversationId, setConversationId] = useState("");
     const [token, setToken] = useState(null);
     const [getusers, setUsers] = useState([]);
-    const [userLoading, setUserLoading] = useState(true)
+    const [userLoading, setUserLoading] = useState(true);
+    const [getAllData, setAllData] = useState([])
 
     // Fetch token function
     const getToken = async () => {
@@ -126,15 +127,21 @@ export const AppProvider = ({ children }) => {
         try {
             const response = await axios.get(`${apihost}/users/${id}`);
 
+            setAllData(response.data)
+            if (response.status === 200 && response.data?.data) {
+                const { data } = response.data;
 
-            if (response.status === 200) {
-                const mappedData = response.data.data.map(item => item.userData)
-                const mappedTaxData = response.data.data.map(item => item.userTax)
-                setUserData(mappedData)
-                setUserTax(mappedTaxData)
+                const mappedData = data?.map(item => item?.userData || {});
+                const mappedTaxData = data?.map(item => item?.userTax || {});
+
+                setAllData(response.data);
+                setUserData(mappedData);
+                setUserTax(mappedTaxData);
             }
 
-        } catch (err) {
+        }
+
+        catch (err) {
             console.error("Error fetching user data:", err);
             setIsError(true);
         } finally {
@@ -168,7 +175,10 @@ export const AppProvider = ({ children }) => {
         }));
     };
 
-    // console.log("____________",users,"_________________")
+
+    console.log('====================================');
+    console.log(getAllData , "_____________");
+    console.log('====================================');
 
     return (
         <AppContext.Provider value={{
@@ -183,6 +193,7 @@ export const AppProvider = ({ children }) => {
             setUserMessage,
             handleSendMessage,
             getusers,
+            getAllData
         }}>
             {children}
         </AppContext.Provider>

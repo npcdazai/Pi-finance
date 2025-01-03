@@ -13,7 +13,6 @@ const EmployeeDetails = () => {
         return savedState !== null ? JSON.parse(savedState) : false;
     });
 
-    console.log(selectedEmployee, "__________________")
 
     const [formData, setFormData] = useState(selectedEmployee || {});
 
