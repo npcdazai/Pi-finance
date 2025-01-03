@@ -1,17 +1,62 @@
 import React, { useState } from "react";
-import { Box, Typography, Grid, TextField, Button, Tabs, Tab } from "@mui/material";
+import { Box, Typography, Grid, TextField, Button, Tabs, Tab, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import IncomeSection from "./IncomeSection";
+import DeductionSection from "./DeductionSection";
+import HRASection from "./HRASection";
+
+// Helper function to format the financial year from yyyy-yyyy to yyyy-yy
+const formatFinancialYear = (year) => {
+  if (!year || year.split("-").length !== 2) {
+    console.error("Invalid financial year format:", year);
+    return "";
+  }
+
+  const [startYear, endYear] = year.split("-");
+  return `${startYear}-${endYear.slice(2)}`;  // Formatting as yyyy-yy
+};
 
 const TaxTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [financialYear, setFinancialYear] = useState("");
+  const [formattedFinancialYear, setFormattedFinancialYear] = useState("");  // State to hold the formatted year
+  const employeeId = "E001";
 
-  const handleChange = (event, newValue) => {
+  // Handle tab change
+  const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
+
+  // Handle financial year selection
+  const handleYearChange = (event) => {
+    const selectedYear = event.target.value;
+    setFinancialYear(selectedYear);
+
+    // Format the selected financial year and store it
+    const formattedYear = formatFinancialYear(selectedYear);
+    setFormattedFinancialYear(formattedYear);
+  };
+
   return (
     <Box sx={{ width: "100%", margin: "auto", marginTop: 4, position: "relative", zIndex: 1 }}>
+      {/* Dropdown for Financial Year */}
+      <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
+        <InputLabel id="financial-year-label">Select Financial Year</InputLabel>
+        <Select
+          labelId="financial-year-label"
+          value={financialYear}
+          onChange={handleYearChange}
+          label="Select Financial Year"
+        >
+          <MenuItem value={"2023-2024"}>2023-2024</MenuItem>
+          <MenuItem value={"2022-2023"}>2022-2023</MenuItem>
+          <MenuItem value={"2021-2022"}>2021-2022</MenuItem>
+        </Select>
+      </FormControl>
+
+      {/* Tabs Section */}
       <Tabs
         value={selectedTab}
-        onChange={handleChange}
+        onChange={handleTabChange}
         TabIndicatorProps={{
           style: {
             backgroundColor: "#A55EEC",
@@ -38,62 +83,21 @@ const TaxTabs = () => {
       </Tabs>
 
       {/* Form */}
-      <Box sx={{ padding: 4, marginTop: 2, backgroundColor: "#f9f9f9", borderRadius: 2 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Gross Salary Income"
-              variant="outlined"
-              placeholder="Enter Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Annual Income from other sources"
-              variant="outlined"
-              placeholder="Enter Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Annual Income from Interest"
-              variant="outlined"
-              placeholder="Enter Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Annual Income from let-out house property (Rental Income)"
-              variant="outlined"
-              placeholder="Enter Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Annual Interest paid on Home Loan (Self occupied)"
-              variant="outlined"
-              placeholder="Enter Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Annual Interest paid on Home Loan (Self occupied)"
-              variant="outlined"
-              placeholder="Enter Amount"
-            />
-          </Grid>
-        </Grid>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
-          <Button variant="contained" sx={{ bgcolor: "#9747FF", color: "#fff", borderRadius: "58px", textTransform: "capitalize" }} >
-            Save & Next
-          </Button>
-        </Box>
+      <Box sx={{ marginTop: 4 }}>
+        {selectedTab === 0 && (
+          <IncomeSection financialYear={financialYear} employeeId={employeeId} />
+        )}
+        {selectedTab === 1 && formattedFinancialYear && (
+          <Box>
+            <DeductionSection financialYear={formattedFinancialYear} employeeId={employeeId} />
+          </Box>
+        )}
+        {selectedTab === 2 && (
+          <Box>
+
+            <HRASection financialYear={formattedFinancialYear} employeeId={employeeId} />
+          </Box>
+        )}
       </Box>
     </Box>
   );
