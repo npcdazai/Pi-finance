@@ -11,8 +11,12 @@ import {
 } from "@mui/material";
 import { AppContext } from "../../context/AppContext";
 
-const SalaryRow = ({ label, iconColor, rowData }) => (
-    <TableRow>
+const SalaryRow = ({ label, rowData, isHighlighted }) => (
+    <TableRow
+        sx={{
+            backgroundColor: isHighlighted ? "#F5F5F5" : "inherit", 
+        }}
+    >
         <TableCell
             sx={{
                 display: "flex",
@@ -21,16 +25,28 @@ const SalaryRow = ({ label, iconColor, rowData }) => (
                 position: "sticky",
                 left: 0,
                 backgroundColor: "#fff",
+                fontWeight: isHighlighted ? 700 : 400,
                 zIndex: 1,
             }}
         >
             <InsertDriveFileIcon
-                sx={{ color: iconColor || "#7F56D9", height: "16.67px", width: "13px" }}
+                sx={{
+                    color: "#FF5722" ,
+                    height: "16.67px",
+                    width: "13px",
+                }}
             />
             {label}
         </TableCell>
         {rowData.map((cellData, index) => (
-            <TableCell key={index} align="center">
+            <TableCell
+                key={index}
+                align="center"
+                sx={{
+                    fontWeight: isHighlighted ? 700 : 400, 
+                    // color: isHighlighted ? "#FF5722" : "inherit", 
+                }}
+            >
                 {cellData}
             </TableCell>
         ))}
@@ -131,6 +147,7 @@ const SalaryTable = () => {
                         <SalaryRow
                             label="Gross Salary"
                             rowData={grossSalaryRowData}
+                            isHighlighted={true}
                         />
                     </TableBody>
                 </Table>
