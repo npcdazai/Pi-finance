@@ -88,7 +88,7 @@ const Home = () => {
                 >
                     <Box>
                         <Typography sx={{ fontWeight: 600, fontSize: 30, color: '#101828' }}>
-                            Welcome back <span style={{color:"yellow" }} >{selectedEmployee.name}</span> , Talk to Pi to grow & save more money!
+                            Welcome back <span style={{color:"#9747FF" }} >{selectedEmployee.name}</span> , Talk to Pi to grow & save more money!
                         </Typography>
                         <Typography sx={{ fontSize: 16, fontWeight: 400, color: '#667085' }}>
                             Track, manage and forecast your customers and orders.

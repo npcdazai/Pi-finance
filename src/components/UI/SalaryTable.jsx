@@ -43,7 +43,7 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
                 key={index}
                 align="center"
                 sx={{
-                    fontWeight: isHighlighted ? 700 : 400, // Bold for Gross Salary cells
+                    fontWeight: isHighlighted ? 700 : 400, 
                     // color: isHighlighted ? "#FF5722" : "inherit",
                 }}
             >
