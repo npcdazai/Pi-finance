@@ -6,9 +6,8 @@ import { AppContext } from "../../context/AppContext";
 
 
 const SalaryTable = () => {
-    const { userDatas, getAllData } = useContext(AppContext);
-    const [salaryData, setSalaryData] = useState([]); // State for salary data
-    const [loading, setLoading] = useState(true); // State for loading status
+    const { isLoading, getAllData  } = useContext(AppContext);
+    const [salaryData, setSalaryData] = useState([]); 
     const months = ["Mar 2024", "Apr 2024", "May 2024", "Jun 2024", "Jul 2024", "Aug 2024", "Sep 2024"];
 
     useEffect(() => {
@@ -16,7 +15,6 @@ const SalaryTable = () => {
             try {
 
                 const rawData = getAllData?.data[0]?.userSalary;
-
                 console.log(rawData, "_________")
 
                 const filteredMonths = rawData.filter((item) => {
@@ -41,15 +39,13 @@ const SalaryTable = () => {
 
             } catch (error) {
                 console.error("Error fetching salary data:", error);
-            } finally {
-                setLoading(false);
-            }
+            } 
         };
 
         fetchData();
     }, []);
 
-    if (loading) {
+    if (isLoading) {
         return <p>Loading salary data...</p>;
     }
 

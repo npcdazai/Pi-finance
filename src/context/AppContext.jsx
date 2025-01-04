@@ -193,7 +193,8 @@ export const AppProvider = ({ children }) => {
             setUserMessage,
             handleSendMessage,
             getusers,
-            getAllData
+            getAllData,
+            setIsLoading
         }}>
             {children}
         </AppContext.Provider>
