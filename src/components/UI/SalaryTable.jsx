@@ -1,80 +1,217 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import React, { useContext } from "react";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+} from "@mui/material";
 import { AppContext } from "../../context/AppContext";
 
-
-
 const SalaryTable = () => {
-    const { isLoading, getAllData  } = useContext(AppContext);
-    const [salaryData, setSalaryData] = useState([]); 
-    const months = ["Mar 2024", "Apr 2024", "May 2024", "Jun 2024", "Jul 2024", "Aug 2024", "Sep 2024"];
+    const { getAllData } = useContext(AppContext);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
+    console.log(getAllData);
 
-                const rawData = getAllData?.data[0]?.userSalary;
-                console.log(rawData, "_________")
+    const salaryData = [
+        {
+            structure: "Basic Pay",
+            values: [50000, 52000, 53000, 54000],
+        },
+        {
+            structure: "HRA",
+            values: [15000, 16000, 16500, 17000],
+        },
+        {
+            structure: "LTA",
+            values: [3000, 3200, 3300, 3400],
+        },
+        {
+            structure: "Special Allowance",
+            values: [7000, 7200, 7500, 7700],
+        },
+    ];
 
-                const filteredMonths = rawData.filter((item) => {
-                    const itemMonth = new Date(item.month).toLocaleString("en-US", {
-                        month: "short",
-                        year: "numeric",
-                    });
-                    return months.includes(itemMonth);
-                });
 
-                const groupedData = [
-                    { structure: "Basic Salary", values: filteredMonths.map((item) => item.basic_salary || 0) },
-                    { structure: "Gross Salary", values: filteredMonths.map((item) => item.gross_salary || 0) },
-                    { structure: "Income Tax TDS", values: filteredMonths.map((item) => item.income_tax_tds || 0) },
-                    { structure: "Net Salary", values: filteredMonths.map((item) => item.net_salary || 0) },
-                    { structure: "PF Contribution", values: filteredMonths.map((item) => item.pf_contribution || 0) },
-                    { structure: "Professional Tax", values: filteredMonths.map((item) => item.professional_tax || 0) },
-                    { structure: "Special Allowance", values: filteredMonths.map((item) => item.special_allowance || 0) },
-                ];
 
-                setSalaryData(groupedData);
+    const grossSalaryValues = salaryData[0]?.values.map((_, index) =>
+        salaryData.reduce((total, item) => total + item.values[index], 0)
+    );
 
-            } catch (error) {
-                console.error("Error fetching salary data:", error);
-            } 
+
+
+    function FormatYearMonth({ isoDate }) {
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            return date.toLocaleString("en-US", { year: "numeric", month: "long" });
         };
 
-        fetchData();
-    }, []);
-
-    if (isLoading) {
-        return <p>Loading salary data...</p>;
+        return <div>{formatDate(isoDate)}</div>;
     }
 
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Salary Structure</TableCell>
-                        {months.map((month, index) => (
-                            <TableCell key={index} align="center">{month}</TableCell>
+        <div style={{ overflowX: "auto" }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+                <Table stickyHeader>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    position: "sticky",
+                                    left: 0,
+                                    backgroundColor: "#fff",
+                                    zIndex: 1
+                                }}
+                            >Salary Structure</TableCell>
+
+                            {getAllData?.data.map((month, index) =>
+                                month?.userSalary.map((val, i) => (
+                                    <TableCell key={`${index}-${i}`} align="center">
+                                        <FormatYearMonth isoDate={val?.month} />
+                                    </TableCell>
+                                ))
+                            )}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {getAllData?.data.map((row, index) => (
+                            <TableRow key={index}>
+                                <TableCell
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        position: "sticky",
+                                        left: 0,
+                                        backgroundColor: "#fff",
+                                        zIndex: 1
+                                    }}
+                                >
+                                    <InsertDriveFileIcon
+                                        sx={{ color: "#7F56D9", height: "16.67px", width: "13px" }}
+                                    />
+                                    Basic Salary
+                                </TableCell>
+                                {row?.userSalary.map((value, i) => (
+                                    <TableCell key={i} align="center">
+                                        {`₹${value?.basic_salary}`}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
                         ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {salaryData.map((row, index) => (
-                        <TableRow key={index}>
-                            <TableCell sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1 }}>
-                                <InsertDriveFileIcon sx={{ color: "#7F56D9", height: "16.67px", width: "13px" }} />
-                                {row.structure || "N/A"}
+
+                        {getAllData?.data.map((row, index) => (
+                            <TableRow key={index}>
+                                <TableCell
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        position: "sticky",
+                                        left: 0,
+                                        backgroundColor: "#fff",
+                                        zIndex: 1
+                                    }}
+                                >
+                                    <InsertDriveFileIcon
+                                        sx={{ color: "#7F56D9", height: "16.67px", width: "13px" }}
+                                    />
+                                    HRA
+                                </TableCell>
+
+                                {row?.userTax.map((value, i) => (
+                                    <TableCell key={i} align="center">
+                                        {`₹${value?.HRA?.rent_amount_annual}`}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+
+                        {getAllData?.data.map((row, index) => (
+                            <TableRow key={index}>
+                                <TableCell
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        position: "sticky",
+                                        left: 0,
+                                        backgroundColor: "#fff",
+                                        zIndex: 1
+                                    }}
+                                >
+                                    <InsertDriveFileIcon
+                                        sx={{ color: "#7F56D9", height: "16.67px", width: "13px" }}
+                                    />
+                                    LTA
+                                </TableCell>
+                                {row?.userTax.map((value, i) => (
+                                    <TableCell key={i} align="center">
+                                        {`₹${value?.lta?.lta_claimed}`}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                        {getAllData?.data.map((row, index) => (
+                            <TableRow key={index}>
+                                <TableCell
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                        position: "sticky",
+                                        left: 0,
+                                        backgroundColor: "#fff",
+                                        zIndex: 1
+                                    }}
+                                >
+                                    <InsertDriveFileIcon
+                                        sx={{ color: "#7F56D9", height: "16.67px", width: "13px" }}
+                                    />
+                                    Special Allowance
+                                </TableCell>
+                                {row?.userSalary.map((value, i) => (
+                                    <TableCell key={i} align="center">
+                                        {`₹${value?.special_allowance}`}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+
+                        {/* Add Gross Salary Row */}
+                        <TableRow>
+                            <TableCell
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    position: "sticky",
+                                    left: 0,
+                                    backgroundColor: "#fff",
+                                    zIndex: 1
+                                }}
+                            >
+                                <InsertDriveFileIcon
+                                    sx={{ color: "#7F56D9", height: "16.67px", width: "13px" }}
+                                />
+                                Gross Salary
                             </TableCell>
-                            {row.values.map((value, i) => (
-                                <TableCell key={i} align="center">₹{value.toLocaleString()}</TableCell>
+                            {grossSalaryValues.map((value, index) => (
+                                <TableCell key={index} align="center" sx={{ fontWeight: 700 }}>
+                                    {`₹${value}`}
+                                </TableCell>
                             ))}
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
     );
 };
 
