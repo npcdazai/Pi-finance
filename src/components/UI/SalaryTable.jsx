@@ -14,7 +14,7 @@ import { AppContext } from "../../context/AppContext";
 const SalaryRow = ({ label, rowData, isHighlighted }) => (
     <TableRow
         sx={{
-            backgroundColor: isHighlighted ? "#F5F5F5" : "inherit", 
+            backgroundColor: isHighlighted ? "#F5F5F5" : "inherit", // Light background for Gross Salary
         }}
     >
         <TableCell
@@ -31,7 +31,7 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
         >
             <InsertDriveFileIcon
                 sx={{
-                    color: "#FF5722" ,
+                    color: "#9747FF",
                     height: "16.67px",
                     width: "13px",
                 }}
@@ -43,8 +43,8 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
                 key={index}
                 align="center"
                 sx={{
-                    fontWeight: isHighlighted ? 700 : 400, 
-                    // color: isHighlighted ? "#FF5722" : "inherit", 
+                    fontWeight: isHighlighted ? 700 : 400, // Bold for Gross Salary cells
+                    // color: isHighlighted ? "#FF5722" : "inherit",
                 }}
             >
                 {cellData}
@@ -94,17 +94,58 @@ const SalaryTable = () => {
         },
     ];
 
+    const netSalaryData = [
+        {
+            label: "PF Contribution",
+            rowData: getAllData.data.flatMap((row) =>
+                row?.userSalary.map((salary) => `₹${salary.pf_contribution || 0}`)
+            ),
+        },
+        {
+            label: "Professnal Tax",
+            rowData: getAllData.data.flatMap((row) =>
+                row?.userSalary.map((salary) => `₹${salary.professional_tax || 0}`)
+            ),
+        },
+        {
+            label: "Income Tax",
+            rowData: getAllData.data.flatMap((row) =>
+                row?.userSalary.map((salary) => `₹${salary.income_tax_tds || 0}`)
+            ),
+        },
+    ];
+
     const grossSalaryData = getAllData.data.map((row) => {
         return row?.userSalary.map((salary, index) => {
             const basic = salary?.basic_salary || 0;
-            const hra = row?.userTax[index]?.HRA?.rent_amount_annual || 0;
-            const lta = row?.userTax[index]?.lta?.lta_claimed || 0;
-            const special = salary?.special_allowance || 0;
+            const hra = row?.userTax[index]?.HRA?.rent_amount_annual || 10;
+            const lta = row?.userTax[index]?.lta?.lta_claimed || 10;
+            const special = salary?.special_allowance || 10;
             return basic + hra + lta + special;
         });
     });
 
     const grossSalaryRowData = grossSalaryData.flat().map((value) => `₹${value}`);
+
+
+
+    const calculateNetSalary = (grossSalaries, deductions) => {
+        const pfContributions = deductions[0]?.rowData.map((pf) => parseFloat(pf.replace(/[₹,]/g, '')) || 0);
+        const professionalTaxes = deductions[1]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, '')) || 0);
+        const incomeTaxes = deductions[2]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, '')) || 0);
+
+        const grossSalariesFlat = grossSalaries.flat().map((salary) => parseFloat(salary.replace(/[₹,]/g, '')) || 0);
+
+        const netSalaries = grossSalariesFlat.map((gross, index) =>
+            gross - (pfContributions[index] || 0) - (professionalTaxes[index] || 0) - (incomeTaxes[index] || 0)
+        );
+
+        return netSalaries;
+    };
+
+    const netSalaries = calculateNetSalary(grossSalaryRowData, netSalaryData);
+
+
 
     return (
         <div style={{ overflowX: "auto" }}>
@@ -149,6 +190,21 @@ const SalaryTable = () => {
                             rowData={grossSalaryRowData}
                             isHighlighted={true}
                         />
+
+                        {netSalaryData.map((item, index) => (
+                            <SalaryRow
+                                key={index}
+                                label={item.label}
+                                rowData={item.rowData}
+                            />
+                        ))}
+
+                        <SalaryRow
+                            label="Net Salary"
+                            rowData={netSalaries}
+                            isHighlighted={true}
+                        />
+
                     </TableBody>
                 </Table>
             </TableContainer>
