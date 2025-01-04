@@ -71,7 +71,7 @@ const ChatBot = () => {
                     width: '100px',
                     height: '70px',
                     cursor: 'pointer',
-                    zIndex: 1
+                    zIndex: 10
                 }}
             >
                 {showChatbot ? (
