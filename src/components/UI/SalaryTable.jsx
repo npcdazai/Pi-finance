@@ -195,7 +195,7 @@ const SalaryTable = () => {
             <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
                 <Table stickyHeader>
                     <TableHead>
-                        <TableRow>
+                        <TableRow sx={{ position: "sticky", top: 0 , zIndex:4 }} >
                             <TableCell
                                 sx={{
                                     display: "flex",
@@ -203,6 +203,7 @@ const SalaryTable = () => {
                                     gap: 1,
                                     position: "sticky",
                                     left: 0,
+                                    top: 0,
                                     backgroundColor: "#fff",
                                     zIndex: 3,
                                 }}
@@ -211,7 +212,7 @@ const SalaryTable = () => {
                             </TableCell>
                             {getAllData?.data.flatMap((row) =>
                                 row?.userSalary.map((val, index) => (
-                                    <TableCell sx={{zIndex:"1"}} key={index} align="center">
+                                    <TableCell sx={{ zIndex: "1" }} key={index} align="center">
                                         <FormatYearMonth isoDate={val?.month} />
                                     </TableCell>
                                 ))
