@@ -51,7 +51,6 @@ const SalaryTable = () => {
 
     if (!getAllData?.data) return <div>No data available</div>;
 
-    // Map salary rows dynamically
     const salaryData = [
         {
             label: "Basic Salary",
@@ -79,7 +78,6 @@ const SalaryTable = () => {
         },
     ];
 
-    // Calculate Gross Salary for each row
     const grossSalaryData = getAllData.data.map((row) => {
         return row?.userSalary.map((salary, index) => {
             const basic = salary?.basic_salary || 0;
@@ -96,7 +94,6 @@ const SalaryTable = () => {
         <div style={{ overflowX: "auto" }}>
             <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
                 <Table stickyHeader>
-                    {/* Table Header */}
                     <TableHead>
                         <TableRow>
                             <TableCell
@@ -122,7 +119,6 @@ const SalaryTable = () => {
                         </TableRow>
                     </TableHead>
 
-                    {/* Table Body */}
                     <TableBody>
                         {salaryData.map((item, index) => (
                             <SalaryRow
@@ -132,7 +128,6 @@ const SalaryTable = () => {
                             />
                         ))}
 
-                        {/* Gross Salary Row */}
                         <SalaryRow
                             label="Gross Salary"
                             rowData={grossSalaryRowData}
