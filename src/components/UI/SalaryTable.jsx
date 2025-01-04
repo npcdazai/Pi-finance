@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import {
     Table,
@@ -8,10 +8,15 @@ import {
     TableHead,
     TableRow,
     Paper,
+    Typography,
+    Button,
+    TextField,
+    Box,
 } from "@mui/material";
 import { AppContext } from "../../context/AppContext";
 
 const SalaryRow = ({ label, rowData, isHighlighted }) => (
+
     <TableRow
         sx={{
             backgroundColor: isHighlighted ? "#F5F5F5" : "inherit", // Light background for Gross Salary
@@ -43,7 +48,7 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
                 key={index}
                 align="center"
                 sx={{
-                    fontWeight: isHighlighted ? 700 : 400, 
+                    fontWeight: isHighlighted ? 700 : 400,
                     // color: isHighlighted ? "#FF5722" : "inherit",
                 }}
             >
@@ -63,6 +68,8 @@ const FormatYearMonth = ({ isoDate }) => {
 };
 
 const SalaryTable = () => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [text, setText] = useState("20LPA");
     const { getAllData } = useContext(AppContext);
 
     if (!getAllData?.data) return <div>No data available</div>;
@@ -148,7 +155,43 @@ const SalaryTable = () => {
 
 
     return (
-        <div style={{ overflowX: "auto" }}>
+        <div style={{ overflowX: "auto", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "1rem" }}>
+            <Box
+                sx={{
+                    border: "1px solid",
+                    borderColor: "grey.400",
+                    borderRadius: 2,
+                    padding: 1,
+                    // width: "150px",
+                    width: isEditing ? "auto" : "150px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                {isEditing ? (
+                    <>
+                        <TextField
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                            size="small"
+                            sx={{ flexGrow: 1, marginRight: 2 }}
+                        />
+                        <Button variant="contained" color="primary" onClick={() => setIsEditing(false)}>
+                            Save
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                            {text}
+                        </Typography>
+                        <Button variant="outlined" color="secondary" onClick={() => setIsEditing(true)}>
+                            Edit
+                        </Button>
+                    </>
+                )}
+            </Box>
             <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
                 <Table stickyHeader>
                     <TableHead>
@@ -161,14 +204,14 @@ const SalaryTable = () => {
                                     position: "sticky",
                                     left: 0,
                                     backgroundColor: "#fff",
-                                    zIndex: 1,
+                                    zIndex: 3,
                                 }}
                             >
                                 Salary Structure
                             </TableCell>
                             {getAllData?.data.flatMap((row) =>
                                 row?.userSalary.map((val, index) => (
-                                    <TableCell key={index} align="center">
+                                    <TableCell sx={{zIndex:"1"}} key={index} align="center">
                                         <FormatYearMonth isoDate={val?.month} />
                                     </TableCell>
                                 ))
