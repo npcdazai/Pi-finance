@@ -16,11 +16,8 @@ import {
 import { AppContext } from "../../context/AppContext";
 
 const SalaryRow = ({ label, rowData, isHighlighted }) => (
-
     <TableRow
-        sx={{
-            backgroundColor: isHighlighted ? "#F5F5F5" : "inherit", // Light background for Gross Salary
-        }}
+        sx={{ backgroundColor: isHighlighted ? "#F5F5F5" : "inherit" }}
     >
         <TableCell
             sx={{
@@ -34,23 +31,14 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
                 zIndex: 1,
             }}
         >
-            <InsertDriveFileIcon
-                sx={{
-                    color: "#9747FF",
-                    height: "16.67px",
-                    width: "13px",
-                }}
-            />
+            <InsertDriveFileIcon sx={{ color: "#9747FF", height: "16.67px", width: "13px" }} />
             {label}
         </TableCell>
         {rowData.map((cellData, index) => (
             <TableCell
                 key={index}
                 align="center"
-                sx={{
-                    fontWeight: isHighlighted ? 700 : 400,
-                    // color: isHighlighted ? "#FF5722" : "inherit",
-                }}
+                sx={{ fontWeight: isHighlighted ? 700 : 400 }}
             >
                 {cellData}
             </TableCell>
@@ -69,7 +57,6 @@ const FormatYearMonth = ({ isoDate }) => {
 
 const SalaryTable = () => {
     const [isEditing, setIsEditing] = useState(false);
-    const [text, setText] = useState("20LPA");
     const { getAllData } = useContext(AppContext);
 
     if (!getAllData?.data) return <div>No data available</div>;
@@ -78,28 +65,35 @@ const SalaryTable = () => {
         {
             label: "Basic Salary",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary.basic_salary || 0}`)
+                row?.userSalary.map((salary) => `₹${salary?.basic_salary || 0}`)
             ),
         },
         {
             label: "HRA",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userTax.map((tax) => `₹${tax?.HRA?.rent_amount_annual || 0}`)
+                row?.userSalary.map((_, index) => {
+                    const rentAmountAnnual = row?.userTax?.[index]?.HRA?.rent_amount_annual;
+                    return `₹${rentAmountAnnual !== undefined && rentAmountAnnual !== null ? rentAmountAnnual : 0}`;
+                })
             ),
         },
         {
             label: "LTA",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userTax.map((tax) => `₹${tax?.lta?.lta_claimed || 0}`)
+                row?.userSalary.map((_, index) => {
+                    const ltaClaimed = row?.userTax?.[index]?.lta?.lta_claimed;
+                    return `₹${ltaClaimed !== undefined && ltaClaimed !== null ? ltaClaimed : 0}`;
+                })
             ),
         },
         {
             label: "Special Allowance",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary.special_allowance || 0}`)
+                row?.userSalary.map((salary) => `₹${salary?.special_allowance || 0}`)
             ),
         },
     ];
+    
 
     const netSalaryData = [
         {
@@ -109,7 +103,7 @@ const SalaryTable = () => {
             ),
         },
         {
-            label: "Professnal Tax",
+            label: "Professional Tax",
             rowData: getAllData.data.flatMap((row) =>
                 row?.userSalary.map((salary) => `₹${salary.professional_tax || 0}`)
             ),
@@ -134,14 +128,12 @@ const SalaryTable = () => {
 
     const grossSalaryRowData = grossSalaryData.flat().map((value) => `₹${value}`);
 
-
-
     const calculateNetSalary = (grossSalaries, deductions) => {
-        const pfContributions = deductions[0]?.rowData.map((pf) => parseFloat(pf.replace(/[₹,]/g, '')) || 0);
-        const professionalTaxes = deductions[1]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, '')) || 0);
-        const incomeTaxes = deductions[2]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, '')) || 0);
+        const pfContributions = deductions[0]?.rowData.map((pf) => parseFloat(pf.replace(/[₹,]/g, "")) || 0);
+        const professionalTaxes = deductions[1]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, "")) || 0);
+        const incomeTaxes = deductions[2]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, "")) || 0);
 
-        const grossSalariesFlat = grossSalaries.flat().map((salary) => parseFloat(salary.replace(/[₹,]/g, '')) || 0);
+        const grossSalariesFlat = grossSalaries.flat().map((salary) => parseFloat(salary.replace(/[₹,]/g, "")) || 0);
 
         const netSalaries = grossSalariesFlat.map((gross, index) =>
             gross - (pfContributions[index] || 0) - (professionalTaxes[index] || 0) - (incomeTaxes[index] || 0)
@@ -149,53 +141,26 @@ const SalaryTable = () => {
 
         return netSalaries;
     };
+    
 
     const netSalaries = calculateNetSalary(grossSalaryRowData, netSalaryData);
 
-
-
     return (
-        <div style={{ overflowX: "auto", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "1rem" }}>
-            <Box
-                sx={{
-                    border: "1px solid",
-                    borderColor: "grey.400",
-                    borderRadius: 2,
-                    padding: 1,
-                    // width: "150px",
-                    width: isEditing ? "auto" : "150px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                }}
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                overflowX: "auto",
+            }}
+        >
+            <TableContainer
+                component={Paper}
+                sx={{ maxHeight: "80vh", overflowY: "hidden", width: "100%" }}
             >
-                {isEditing ? (
-                    <>
-                        <TextField
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            size="small"
-                            sx={{ flexGrow: 1, marginRight: 2 }}
-                        />
-                        <Button variant="contained" color="primary" onClick={() => setIsEditing(false)}>
-                            Save
-                        </Button>
-                    </>
-                ) : (
-                    <>
-                        <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                            {text}
-                        </Typography>
-                        <Button variant="outlined" color="secondary" onClick={() => setIsEditing(true)}>
-                            Edit
-                        </Button>
-                    </>
-                )}
-            </Box>
-            <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
                 <Table stickyHeader>
                     <TableHead>
-                        <TableRow sx={{ position: "sticky", top: 0 , zIndex:4 }} >
+                        <TableRow>
                             <TableCell
                                 sx={{
                                     display: "flex",
@@ -212,7 +177,7 @@ const SalaryTable = () => {
                             </TableCell>
                             {getAllData?.data.flatMap((row) =>
                                 row?.userSalary.map((val, index) => (
-                                    <TableCell sx={{ zIndex: "1" }} key={index} align="center">
+                                    <TableCell sx={{ zIndex: 1 }} key={index} align="center">
                                         <FormatYearMonth isoDate={val?.month} />
                                     </TableCell>
                                 ))
@@ -222,11 +187,7 @@ const SalaryTable = () => {
 
                     <TableBody>
                         {salaryData.map((item, index) => (
-                            <SalaryRow
-                                key={index}
-                                label={item.label}
-                                rowData={item.rowData}
-                            />
+                            <SalaryRow key={index} label={item.label} rowData={item.rowData} />
                         ))}
 
                         <SalaryRow
@@ -236,11 +197,7 @@ const SalaryTable = () => {
                         />
 
                         {netSalaryData.map((item, index) => (
-                            <SalaryRow
-                                key={index}
-                                label={item.label}
-                                rowData={item.rowData}
-                            />
+                            <SalaryRow key={index} label={item.label} rowData={item.rowData} />
                         ))}
 
                         <SalaryRow
@@ -248,7 +205,6 @@ const SalaryTable = () => {
                             rowData={netSalaries}
                             isHighlighted={true}
                         />
-
                     </TableBody>
                 </Table>
             </TableContainer>

@@ -83,19 +83,18 @@ const EmployeeDetails = () => {
                         gap: 2,
                     }}
                 >
-                    {userDatas.map((val) => {
-                        return (
-                            <Box key={val.employee_id} sx={{ display: "flex", gap: 3 , width:"100%"}} >
-                                <InfoBox title={val.job_title} subtitle="Designation" />
-                                <InfoBox title="1,210" subtitle="Interest Income" />
-                                <InfoBox title={val.age} subtitle="Age" />
-                                <InfoBox title="₹32k" subtitle="Rent" />
-                                <InfoBox title="Rented" subtitle="House" />
-                                <InfoBox title="IT" subtitle="Company" />
-                                <InfoBox title={val.marital_status} subtitle="Marital Status" />
-                            </Box>
-                        )
-                    })}
+                 {userDatas?.map((val) => (
+                    <Box key={val.employee_id} sx={{ display: "flex", gap: 3, width: "100%" }}>
+                        <InfoBox title={val.job_title} subtitle="Designation" />
+                        <InfoBox title="1,210" subtitle="Interest Income" />
+                        <InfoBox title={val.age} subtitle="Age" />
+                        <InfoBox title="₹32k" subtitle="Rent" />
+                        <InfoBox title="Rented" subtitle="House" />
+                        <InfoBox title="IT" subtitle="Company" />
+                        <InfoBox title={val.marital_status} subtitle="Marital Status" />
+                    </Box>
+                ))}
+
                 </Box>
             }
         </Box>
