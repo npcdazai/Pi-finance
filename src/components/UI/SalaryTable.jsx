@@ -192,7 +192,7 @@ const SalaryTable = () => {
                     </>
                 )}
             </Box>
-            <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 700 }}>
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow sx={{ position: "sticky", top: 0 , zIndex:4 }} >
