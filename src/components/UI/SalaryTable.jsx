@@ -171,7 +171,7 @@ const SalaryTable = () => {
         >
             <TableContainer
                 component={Paper}
-                sx={{ maxHeight: "80vh", overflowY: "hidden", width: "100%" }}
+                sx={{ maxHeight: 700, overflowY: "hidden", width: "100%" }}
             >
                 <Table stickyHeader>
                     <TableHead>
