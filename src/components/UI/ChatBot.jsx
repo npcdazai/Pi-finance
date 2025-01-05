@@ -105,6 +105,7 @@ const ChatBot = () => {
                         <CloseIcon />
                         <Typography variant="h6" color="#101828" fontWeight={600} sx={{ ml: 1 }}>
                             Close
+                            
                         </Typography>
                     </>
                 ) : (
