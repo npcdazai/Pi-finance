@@ -55,17 +55,12 @@ const UserProfile = () => {
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     gap: 2,
                     padding: 4,
-                    maxWidth: '100%',
-                    overflow: 'hidden',
-                    '@media (max-width: 900px)': {
-                        gridTemplateColumns: '1fr 1fr',
-                    },
                     '@media (max-width: 600px)': {
-                        gridTemplateColumns: '1fr',
+                        gridTemplateColumns: '1fr',  // Stack fields vertically on mobile
                     },
                 }}
             >
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">Designation</Typography>
                     <TextField
                         variant="outlined"
@@ -75,11 +70,10 @@ const UserProfile = () => {
                         error={!!errors.designation}
                         helperText={errors.designation}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
 
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">Interest Income</Typography>
                     <TextField
                         variant="outlined"
@@ -89,11 +83,10 @@ const UserProfile = () => {
                         error={!!errors.interestIncome}
                         helperText={errors.interestIncome}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
 
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">Age</Typography>
                     <TextField
                         variant="outlined"
@@ -103,11 +96,10 @@ const UserProfile = () => {
                         error={!!errors.age}
                         helperText={errors.age}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
 
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">Rent</Typography>
                     <TextField
                         variant="outlined"
@@ -117,11 +109,10 @@ const UserProfile = () => {
                         error={!!errors.rent}
                         helperText={errors.rent}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
 
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">House</Typography>
                     <TextField
                         variant="outlined"
@@ -131,11 +122,10 @@ const UserProfile = () => {
                         error={!!errors.house}
                         helperText={errors.house}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
 
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">Company</Typography>
                     <TextField
                         variant="outlined"
@@ -145,11 +135,10 @@ const UserProfile = () => {
                         error={!!errors.company}
                         helperText={errors.company}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
 
-                <Box sx={{ overflow: 'hidden' }}>
+                <Box>
                     <Typography variant="subtitle2">Marital Status</Typography>
                     <TextField
                         variant="outlined"
@@ -159,12 +148,11 @@ const UserProfile = () => {
                         error={!!errors.maritalStatus}
                         helperText={errors.maritalStatus}
                         fullWidth
-                        sx={{ width: '100%' }}
                     />
                 </Box>
             </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "end", marginTop: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "end" }}>
                 <Button sx={{ bgcolor: "#9747FF", color: "#fff", textTransform: "capitalize" }} type="submit" variant="contained">
                     Submit
                 </Button>

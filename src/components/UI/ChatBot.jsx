@@ -104,8 +104,8 @@ const ChatBot = () => {
                         position: "fixed",
                         bottom: 111,
                         right: 30,
-                        width: isMaximized ? "600px" : "400px",
-                        height: isMaximized ? "500px" : "300px",
+                        width: isMaximized ? "600px" : "400px", // Default size for PC
+                        height: isMaximized ? "500px" : "300px", // Default size for PC
                         transition: "height 0.3s ease, width 0.3s ease",
                         borderRadius: "16px",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
@@ -113,6 +113,11 @@ const ChatBot = () => {
                         display: "flex",
                         flexDirection: "column",
                         zIndex: 4,
+                        "@media (max-width: 600px)": {
+                            width: "80%", // Ensure chatbot is 80% of the width on mobile
+                            height: "60vh", // Ensure height is 60vh on mobile
+                            bottom: 80, // Adjust bottom position on smaller screens
+                        },
                     }}
                 >
                     <Box
@@ -210,3 +215,4 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
+    
