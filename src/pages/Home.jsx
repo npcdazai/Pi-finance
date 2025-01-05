@@ -6,7 +6,7 @@ import EmployeeDetails from '../components/UI/EmployeeDetails';
 import SalaryTable from '../components/SalaryDetails';
 import TaxDeclarations from '../components/TaxDeclarations';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import pfp from '../../public/images/Avtar/avtar.png';
+import pfp from '../../public/images/Avtar/kunal.jpg';
 import { AppContext } from '../context/AppContext';
 
 const Home = () => {

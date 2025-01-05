@@ -28,8 +28,8 @@ const EmployeeDetails = () => {
                 flex: 1,
                 padding: 1,
                 textAlign: 'center',
-                minWidth: '150px',  // Ensuring a minimum width
-                maxWidth: '250px',  // Restricting width on larger screens
+                // minWidth: '100px', 
+                maxWidth: '250px', 
             }}
         >
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>

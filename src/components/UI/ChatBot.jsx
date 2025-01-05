@@ -104,8 +104,8 @@ const ChatBot = () => {
                         position: "fixed",
                         bottom: 111,
                         right: 30,
-                        width: isMaximized ? "600px" : "400px", // Default size for PC
-                        height: isMaximized ? "500px" : "300px", // Default size for PC
+                        width: isMaximized ? "600px" : "400px",
+                        height: isMaximized ? "430px" : "300px",
                         transition: "height 0.3s ease, width 0.3s ease",
                         borderRadius: "16px",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
@@ -114,9 +114,9 @@ const ChatBot = () => {
                         flexDirection: "column",
                         zIndex: 4,
                         "@media (max-width: 600px)": {
-                            width: "80%", // Ensure chatbot is 80% of the width on mobile
-                            height: "60vh", // Ensure height is 60vh on mobile
-                            bottom: 80, // Adjust bottom position on smaller screens
+                            width: "80%",
+                            height: "50vh",
+                            bottom: 80,
                         },
                     }}
                 >
@@ -129,8 +129,8 @@ const ChatBot = () => {
                             alignItems: "center",
                         }}
                     >
-                        <Typography variant="h6" sx={{ color: "#101828", fontWeight: 600 }}>
-                            Ask Pi
+                        <Typography variant="h6" sx={{ color: "#101828", fontWeight: 600 ,display:"flex" , alignItems:"center" , gap:1 }}>
+                            Ask  <Avatar src={avtar} alt="Avatar" sx={{ height: 32, width: 32 }} />
                         </Typography>
                         <IconButton onClick={() => setIsMaximized(!isMaximized)} size="small">
                             <FiMaximize2 />
@@ -215,4 +215,3 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
-    
