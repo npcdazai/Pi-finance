@@ -17,8 +17,8 @@ const formatFinancialYear = (year) => {
 
 const TaxTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [financialYear, setFinancialYear] = useState("");
-  const [formattedFinancialYear, setFormattedFinancialYear] = useState("");  // State to hold the formatted year
+  const [financialYear, setFinancialYear] = useState("2023-2024");
+  const [formattedFinancialYear, setFormattedFinancialYear] = useState("2023-24");  // State to hold the formatted year
   const employeeId = "E001";
 
   // Handle tab change

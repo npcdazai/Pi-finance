@@ -98,11 +98,16 @@ const DeductionSection = ({ financialYear, employeeId }) => {
   };
 
   const formatSectionTitle = (section) => {
-    // Replace underscores with spaces, capitalize the first letter of each word
     return section
       .replace(/_/g, " ")
-      .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase()) // Capitalize the first letter of each word
+      .replace(/(?:^|\s)\S/g, (a) => a.toUpperCase())
       .replace("Section", "Section ");
+  };
+
+  const formatCurrency = (value) => {
+    return value !== undefined && value !== null
+      ? `₹ ${value.toLocaleString("en-IN")}`
+      : "₹ 0";
   };
 
   if (loading) return <Typography>Loading...</Typography>;
@@ -189,7 +194,7 @@ const DeductionSection = ({ financialYear, employeeId }) => {
                         textAlign: "right",
                       }}
                     >
-                      {value || 0}
+                      {formatCurrency(value)}
                     </Typography>
                   )}
                 </Box>

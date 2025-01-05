@@ -66,6 +66,13 @@ const IncomeSection = ({ financialYear, employeeId }) => {
     setIncomeData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(value);
+  };
+
   if (loading) return <Typography>Loading...</Typography>;
 
   return (
@@ -115,7 +122,7 @@ const IncomeSection = ({ financialYear, employeeId }) => {
                 />
               ) : (
                 <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                  {value || 0}
+                  {formatCurrency(value || 0)}
                 </Typography>
               )}
             </Box>

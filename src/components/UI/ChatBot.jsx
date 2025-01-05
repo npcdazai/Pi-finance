@@ -62,6 +62,25 @@ const ChatBot = () => {
         }, 1000);
     };
 
+    // Helper function to format bot responses
+    const formatBotResponse = (text) => {
+        // If the response is in the form of stock recommendations or any structured data, format it
+        const formattedText = text.split("\n").map((line, index) => (
+            <Typography
+                key={index}
+                variant="body1"
+                sx={{
+                    whiteSpace: "pre-line", // Preserve line breaks
+                    wordBreak: "break-word",
+                    marginBottom: "10px", // Add margin for spacing between lines
+                }}
+            >
+                {line}
+            </Typography>
+        ));
+        return <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>{formattedText}</Box>;
+    };
+
     return (
         <Box>
             <Box
@@ -162,7 +181,13 @@ const ChatBot = () => {
                                         backgroundColor: msg.sender === "user" ? "#000" : "#f1f1f1",
                                         color: msg.sender === "user" ? "#fff" : "#000",
                                     }}
-                                    primary={msg.text}
+                                    primary={
+                                        msg.sender === "bot" ? (
+                                            formatBotResponse(msg.text) // Call the helper function for better formatting
+                                        ) : (
+                                            msg.text
+                                        )
+                                    }
                                 />
                             </ListItem>
                         ))}
@@ -215,4 +240,3 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
-    

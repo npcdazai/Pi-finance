@@ -3,20 +3,21 @@ import { Box, Typography, Button, Grid, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 
 const HRASection = ({ financialYear, employeeId }) => {
-  const [hraData, setHraData] = useState({
-    city: "",
-    houseType: "",
-    rentPaidAnnual: 0,
-    hraReceived: 0,
-    state1: 0,
-    state2: 0,
-    hraDeductible: 0,
-  });
+  const [hraData, setHraData] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const formatToINR = (value) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           `https://staging.getpi.in/backend/v1/hrms/hr/fetch/hra_deductible/${employeeId}`,
@@ -27,7 +28,6 @@ const HRASection = ({ financialYear, employeeId }) => {
           }
         );
         const data = await response.json();
-
         setHraData({
           city: data?.data?.city || "",
           houseType: data?.data?.house_type || "",
@@ -77,7 +77,7 @@ const HRASection = ({ financialYear, employeeId }) => {
         </Button>
       </Box>
       <Grid container spacing={2}>
-        {Object.entries(hraData).map(([key, value]) => (
+        {hraData && Object.entries(hraData).map(([key, value]) => (
           <Grid item xs={12} md={6} key={key}>
             <Box
               sx={{
@@ -105,7 +105,7 @@ const HRASection = ({ financialYear, employeeId }) => {
                 />
               ) : (
                 <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                  {value || 0}
+                  {typeof value === "number" ? formatToINR(value) : value}
                 </Typography>
               )}
             </Box>

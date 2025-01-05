@@ -16,9 +16,7 @@ import {
 import { AppContext } from "../../context/AppContext";
 
 const SalaryRow = ({ label, rowData, isHighlighted }) => (
-    <TableRow
-        sx={{ backgroundColor: isHighlighted ? "#F5F5F5" : "inherit" }}
-    >
+    <TableRow sx={{ backgroundColor: isHighlighted ? "#F5F5F5" : "inherit" }}>
         <TableCell
             sx={{
                 display: "flex",
@@ -35,11 +33,7 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
             {label}
         </TableCell>
         {rowData.map((cellData, index) => (
-            <TableCell
-                key={index}
-                align="center"
-                sx={{ fontWeight: isHighlighted ? 700 : 400 }}
-            >
+            <TableCell key={index} align="center" sx={{ fontWeight: isHighlighted ? 700 : 400 }}>
                 {cellData}
             </TableCell>
         ))}
@@ -55,6 +49,15 @@ const FormatYearMonth = ({ isoDate }) => {
     return <div>{formatDate(isoDate)}</div>;
 };
 
+const formatCurrency = (value) => {
+    // Ensure the value is a number
+    const num = parseFloat(value);
+    if (!isNaN(num)) {
+        return num.toLocaleString("en-IN", { style: "currency", currency: "INR" });
+    }
+    return value; // Return the original value if it's not a valid number
+};
+
 const SalaryTable = () => {
     const [isEditing, setIsEditing] = useState(false);
     const { getAllData } = useContext(AppContext);
@@ -65,7 +68,7 @@ const SalaryTable = () => {
         {
             label: "Basic Salary",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary?.basic_salary || 0}`)
+                row?.userSalary.map((salary) => formatCurrency(salary?.basic_salary || 0))
             ),
         },
         {
@@ -73,7 +76,7 @@ const SalaryTable = () => {
             rowData: getAllData.data.flatMap((row) =>
                 row?.userSalary.map((_, index) => {
                     const rentAmountAnnual = row?.userTax?.[index]?.HRA?.rent_amount_annual;
-                    return `₹${rentAmountAnnual !== undefined && rentAmountAnnual !== null ? rentAmountAnnual : 0}`;
+                    return formatCurrency(rentAmountAnnual !== undefined && rentAmountAnnual !== null ? rentAmountAnnual : 0);
                 })
             ),
         },
@@ -82,36 +85,35 @@ const SalaryTable = () => {
             rowData: getAllData.data.flatMap((row) =>
                 row?.userSalary.map((_, index) => {
                     const ltaClaimed = row?.userTax?.[index]?.lta?.lta_claimed;
-                    return `₹${ltaClaimed !== undefined && ltaClaimed !== null ? ltaClaimed : 0}`;
+                    return formatCurrency(ltaClaimed !== undefined && ltaClaimed !== null ? ltaClaimed : 0);
                 })
             ),
         },
         {
             label: "Special Allowance",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary?.special_allowance || 0}`)
+                row?.userSalary.map((salary) => formatCurrency(salary?.special_allowance || 0))
             ),
         },
     ];
-    
 
     const netSalaryData = [
         {
             label: "PF Contribution",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary.pf_contribution || 0}`)
+                row?.userSalary.map((salary) => formatCurrency(salary.pf_contribution || 0))
             ),
         },
         {
             label: "Professional Tax",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary.professional_tax || 0}`)
+                row?.userSalary.map((salary) => formatCurrency(salary.professional_tax || 0))
             ),
         },
         {
             label: "Income Tax",
             rowData: getAllData.data.flatMap((row) =>
-                row?.userSalary.map((salary) => `₹${salary.income_tax_tds || 0}`)
+                row?.userSalary.map((salary) => formatCurrency(salary.income_tax_tds || 0))
             ),
         },
     ];
@@ -126,14 +128,28 @@ const SalaryTable = () => {
         });
     });
 
-    const grossSalaryRowData = grossSalaryData.flat().map((value) => `₹${value}`);
+    const grossSalaryRowData = grossSalaryData.flat().map((value) => formatCurrency(value));
 
     const calculateNetSalary = (grossSalaries, deductions) => {
-        const pfContributions = deductions[0]?.rowData.map((pf) => parseFloat(pf.replace(/[₹,]/g, "")) || 0);
-        const professionalTaxes = deductions[1]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, "")) || 0);
-        const incomeTaxes = deductions[2]?.rowData.map((tax) => parseFloat(tax.replace(/[₹,]/g, "")) || 0);
+        const pfContributions = deductions[0]?.rowData.map((pf) => {
+            const pfValue = pf.replace ? pf.replace(/[₹,]/g, "") : pf; // Ensure the value has replace method
+            return parseFloat(pfValue) || 0;
+        });
 
-        const grossSalariesFlat = grossSalaries.flat().map((salary) => parseFloat(salary.replace(/[₹,]/g, "")) || 0);
+        const professionalTaxes = deductions[1]?.rowData.map((tax) => {
+            const taxValue = tax.replace ? tax.replace(/[₹,]/g, "") : tax;
+            return parseFloat(taxValue) || 0;
+        });
+
+        const incomeTaxes = deductions[2]?.rowData.map((tax) => {
+            const taxValue = tax.replace ? tax.replace(/[₹,]/g, "") : tax;
+            return parseFloat(taxValue) || 0;
+        });
+
+        const grossSalariesFlat = grossSalaries.flat().map((salary) => {
+            const salaryValue = salary.replace ? salary.replace(/[₹,]/g, "") : salary;
+            return parseFloat(salaryValue) || 0;
+        });
 
         const netSalaries = grossSalariesFlat.map((gross, index) =>
             gross - (pfContributions[index] || 0) - (professionalTaxes[index] || 0) - (incomeTaxes[index] || 0)
@@ -141,9 +157,8 @@ const SalaryTable = () => {
 
         return netSalaries;
     };
-    
 
-    const netSalaries = calculateNetSalary(grossSalaryRowData, netSalaryData);
+    const netSalaries = calculateNetSalary(grossSalaryRowData, netSalaryData).map((netSalary) => formatCurrency(netSalary));
 
     return (
         <div
