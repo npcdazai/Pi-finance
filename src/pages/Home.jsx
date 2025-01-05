@@ -13,13 +13,11 @@ const Home = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const { userDatas, selectedEmployee, setSelectedEmployee, getusers } = useContext(AppContext);
 
-
     useEffect(() => {
         if (getusers?.length > 0 && !selectedEmployee) {
             setSelectedEmployee(getusers[0]);
         }
     }, [getusers, selectedEmployee]);
-
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -52,11 +50,8 @@ const Home = () => {
                     component="img"
                     src={employee.avatar || pfp}
                     alt={employee.name}
-                    sx={{ height: 40, width: 40, borderRadius: '50%', }}
+                    sx={{ height: 40, width: 40, borderRadius: '50%' }}
                 />
-                {/* <Typography sx={{ fontSize: '14px', fontWeight: 500 }}>
-                    {employee.name}
-                </Typography> */}
                 <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{employee.name}</Typography>
                 <Typography sx={{ fontSize: 14, color: '#000000' }}>
                     Loaction : {employee.location} • Emp No: {employee.employee_id}
@@ -74,6 +69,9 @@ const Home = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                '@media (max-width: 600px)': {
+                    px: 4, // Less padding on mobile
+                },
             }}
         >
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, width: '100%' }}>
@@ -84,11 +82,15 @@ const Home = () => {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         mt: '2rem',
+                        '@media (max-width: 600px)': {
+                            flexDirection: 'column', // Stack content vertically on small screens
+                            alignItems: 'flex-start',
+                        },
                     }}
                 >
                     <Box>
                         <Typography sx={{ fontWeight: 600, fontSize: 30, color: '#101828' }}>
-                            Welcome back <span style={{color:"#9747FF" }} >{selectedEmployee.name}</span> , Talk to Pi to grow & save more money!
+                            Welcome back <span style={{ color: '#9747FF' }}>{selectedEmployee.name}</span>, Talk to Pi to grow & save more money!
                         </Typography>
                         <Typography sx={{ fontSize: 16, fontWeight: 400, color: '#667085' }}>
                             Track, manage and forecast your customers and orders.
@@ -104,6 +106,10 @@ const Home = () => {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         gap: 4,
+                        '@media (max-width: 600px)': {
+                            flexDirection: 'column', // Stack on small screens
+                            gap: 2,
+                        },
                     }}
                 >
                     <Box>
@@ -119,6 +125,9 @@ const Home = () => {
                                 boxShadow: 1,
                                 borderRadius: 2,
                                 cursor: 'pointer',
+                                '@media (max-width: 600px)': {
+                                    width: '100%', // Full width on small screens
+                                },
                             }}
                             onClick={handleMenuOpen}
                         >
@@ -131,7 +140,7 @@ const Home = () => {
                             <Box sx={{ flex: 1 }}>
                                 <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEmployee.name}</Typography>
                                 <Typography sx={{ fontSize: 14, color: '#000000' }}>
-                                    Loaction : {selectedEmployee.location} • Emp No: {selectedEmployee.employee_id}
+                                    Location : {selectedEmployee.location} • Emp No: {selectedEmployee.employee_id}
                                 </Typography>
                             </Box>
                             <IconButton>
