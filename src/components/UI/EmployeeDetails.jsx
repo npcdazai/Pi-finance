@@ -1,20 +1,15 @@
-import { Box, Button, Card, Grid, Typography } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import { Box, Button, Typography } from '@mui/material';
+import React, { useContext, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import UserProfile from './UserProfile';
 import { AppContext } from '../../context/AppContext';
 
-
-
 const EmployeeDetails = () => {
-    const { selectedEmployee, updateEmployeeDetails, userDatas } = useContext(AppContext);
+    const { selectedEmployee, userDatas } = useContext(AppContext);
     const [isEdit, setIsEdit] = useState(() => {
         const savedState = sessionStorage.getItem('isEdit');
         return savedState !== null ? JSON.parse(savedState) : false;
     });
-
-
-    const [formData, setFormData] = useState(selectedEmployee || {});
 
     const toggleEditMode = () => {
         setIsEdit((prev) => {
@@ -31,24 +26,27 @@ const EmployeeDetails = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 flex: 1,
+                padding: 1,
+                textAlign: 'center',
+                minWidth: '150px',  // Ensuring a minimum width
+                maxWidth: '250px',  // Restricting width on larger screens
             }}
         >
-            <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                 {title}
             </Typography>
-            <Typography variant="subtitle2" color="textSecondary" sx={{ textAlign: 'center' }}>
+            <Typography variant="subtitle2" color="textSecondary">
                 {subtitle}
             </Typography>
         </Box>
     );
 
-
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }} >
-            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }} >
-                <Box display="flex" flexDirection="column" alignItems="flex-start" >
-                    <Typography variant='h5' sx={{}} >Employee Details</Typography>
-                    <Typography variant='caption' sx={{ color: "#667085" }} >View & Edit Employee Details</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+                <Box display="flex" flexDirection="column" alignItems="flex-start">
+                    <Typography variant='h5'>Employee Details</Typography>
+                    <Typography variant='caption' sx={{ color: "#667085" }}>View & Edit Employee Details</Typography>
                 </Box>
                 <Button
                     onClick={toggleEditMode}
@@ -65,10 +63,10 @@ const EmployeeDetails = () => {
                     {isEdit ? "Cancel" : "Edit"}
                 </Button>
             </Box>
-            {isEdit ?
-                <UserProfile />
-                :
 
+            {isEdit ? (
+                <UserProfile />
+            ) : (
                 <Box
                     sx={{
                         display: 'flex',
@@ -83,22 +81,23 @@ const EmployeeDetails = () => {
                         gap: 2,
                     }}
                 >
-                 {userDatas?.map((val) => (
-                    <Box key={val.employee_id} sx={{ display: "flex", gap: 3, width: "100%" }}>
-                        <InfoBox title={val.job_title} subtitle="Designation" />
-                        <InfoBox title="1,210" subtitle="Interest Income" />
-                        <InfoBox title={val.age} subtitle="Age" />
-                        <InfoBox title="₹32k" subtitle="Rent" />
-                        <InfoBox title="Rented" subtitle="House" />
-                        <InfoBox title="IT" subtitle="Company" />
-                        <InfoBox title={val.marital_status} subtitle="Marital Status" />
+                    <Box sx={{ display: "flex", gap: 3, flexWrap: 'wrap', width: "100%" }}>
+                        {userDatas?.map((val) => (
+                            <React.Fragment key={val.employee_id}>
+                                <InfoBox title={val.job_title} subtitle="Designation" />
+                                <InfoBox title="1,210" subtitle="Interest Income" />
+                                <InfoBox title={val.age} subtitle="Age" />
+                                <InfoBox title="₹32k" subtitle="Rent" />
+                                <InfoBox title="Rented" subtitle="House" />
+                                <InfoBox title="IT" subtitle="Company" />
+                                <InfoBox title={val.marital_status} subtitle="Marital Status" />
+                            </React.Fragment>
+                        ))}
                     </Box>
-                ))}
-
                 </Box>
-            }
+            )}
         </Box>
-    )
-}
+    );
+};
 
-export default EmployeeDetails
+export default EmployeeDetails;
