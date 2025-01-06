@@ -128,7 +128,7 @@ const ChatBot = () => {
                         bottom: 111,
                         right: 30,
                         width: isMaximized ? "600px" : "500px",
-                        height: isMaximized ? "530px" : "350px",
+                        height: isMaximized ? "430px" : "300px",
                         transition: "height 0.3s ease, width 0.3s ease",
                         borderRadius: "16px",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
