@@ -34,12 +34,18 @@ const ChatBot = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [fadeOut, setFadeOut] = useState(false);
     const messagesEndRef = useRef(null);
-
+    const inputRef = useRef(null); 
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
+
+    useEffect(() => {
+        if (showChatbot && inputRef.current) {
+            inputRef.current.focus(); 
+        }
+    }, [showChatbot]);
 
     const handleSendMessageWithDelay = () => {
         handleSendMessage();
@@ -62,17 +68,15 @@ const ChatBot = () => {
         }, 1000);
     };
 
-    // Helper function to format bot responses
     const formatBotResponse = (text) => {
-        // If the response is in the form of stock recommendations or any structured data, format it
         const formattedText = text.split("\n").map((line, index) => (
             <Typography
                 key={index}
                 variant="body1"
                 sx={{
-                    whiteSpace: "pre-line", // Preserve line breaks
+                    whiteSpace: "pre-line",
                     wordBreak: "break-word",
-                    marginBottom: "10px", // Add margin for spacing between lines
+                    marginBottom: "10px",
                 }}
             >
                 {line}
@@ -105,7 +109,6 @@ const ChatBot = () => {
                         <CloseIcon />
                         <Typography variant="h6" color="#101828" fontWeight={600} sx={{ ml: 1 }}>
                             Close
-                            
                         </Typography>
                     </>
                 ) : (
@@ -124,8 +127,8 @@ const ChatBot = () => {
                         position: "fixed",
                         bottom: 111,
                         right: 30,
-                        width: isMaximized ? "600px" : "400px",
-                        height: isMaximized ? "430px" : "300px",
+                        width: isMaximized ? "600px" : "500px",
+                        height: isMaximized ? "530px" : "350px",
                         transition: "height 0.3s ease, width 0.3s ease",
                         borderRadius: "16px",
                         boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
@@ -149,8 +152,8 @@ const ChatBot = () => {
                             alignItems: "center",
                         }}
                     >
-                        <Typography variant="h6" sx={{ color: "#101828", fontWeight: 600 ,display:"flex" , alignItems:"center" , gap:1 }}>
-                            Ask  <Avatar src={avtar} alt="Avatar" sx={{ height: 32, width: 32 }} />
+                        <Typography variant="h6" sx={{ color: "#101828", fontWeight: 600, display: "flex", alignItems: "center", gap: 1 }}>
+                            Ask <Avatar src={avtar} alt="Avatar" sx={{ height: 32, width: 32 }} />
                         </Typography>
                         <IconButton onClick={() => setIsMaximized(!isMaximized)} size="small">
                             <FiMaximize2 />
@@ -184,7 +187,7 @@ const ChatBot = () => {
                                     }}
                                     primary={
                                         msg.sender === "bot" ? (
-                                            formatBotResponse(msg.text) // Call the helper function for better formatting
+                                            formatBotResponse(msg.text)
                                         ) : (
                                             msg.text
                                         )
@@ -220,6 +223,7 @@ const ChatBot = () => {
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") handleSendMessageWithDelay();
                             }}
+                            inputRef={inputRef} 
                         />
                         <Button
                             variant="contained"

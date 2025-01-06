@@ -54,7 +54,8 @@ const Home = () => {
                 />
                 <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{employee.name}</Typography>
                 <Typography sx={{ fontSize: 14, color: '#000000' }}>
-                    Loaction : {employee.location} • Emp No: {employee.employee_id}
+                    {/* Loaction : {employee.location} •  */}
+                    Emp No: {employee.employee_id}
                 </Typography>
             </Box>
         </MenuItem>
@@ -70,7 +71,7 @@ const Home = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 '@media (max-width: 600px)': {
-                    px: 4, // Less padding on mobile
+                    px: 4,
                 },
             }}
         >
@@ -83,7 +84,7 @@ const Home = () => {
                         justifyContent: 'space-between',
                         mt: '2rem',
                         '@media (max-width: 600px)': {
-                            flexDirection: 'column', // Stack content vertically on small screens
+                            flexDirection: 'column', 
                             alignItems: 'flex-start',
                         },
                     }}
@@ -107,13 +108,13 @@ const Home = () => {
                         justifyContent: 'space-between',
                         gap: 4,
                         '@media (max-width: 600px)': {
-                            flexDirection: 'column', // Stack on small screens
+                            flexDirection: 'column', 
                             gap: 2,
                         },
                     }}
                 >
                     <Box>
-                        <Typography sx={{ fontSize: 16, fontWeight: 500, color: '#000000B2' }}>
+                        <Typography sx={{ fontSize: 16, fontWeight: 500, color: '#000000B2' , mb:1 }}>
                             Select Employee
                         </Typography>
                         <Card
@@ -122,11 +123,12 @@ const Home = () => {
                                 alignItems: 'center',
                                 p: 1,
                                 gap: 2,
+                                height:"100%",
                                 boxShadow: 1,
                                 borderRadius: 2,
                                 cursor: 'pointer',
                                 '@media (max-width: 600px)': {
-                                    width: '100%', // Full width on small screens
+                                    width: '100%', 
                                 },
                             }}
                             onClick={handleMenuOpen}
@@ -135,12 +137,13 @@ const Home = () => {
                                 component="img"
                                 src={selectedEmployee.avatar || pfp}
                                 alt={selectedEmployee.name}
-                                sx={{ height: 72, width: 72, borderRadius: '50%' }}
+                                sx={{ height: 80, width: 80, borderRadius: '50%' }}
                             />
                             <Box sx={{ flex: 1 }}>
-                                <Typography sx={{ fontSize: 16, fontWeight: 500 }}>{selectedEmployee.name}</Typography>
-                                <Typography sx={{ fontSize: 14, color: '#000000' }}>
-                                    Location : {selectedEmployee.location} • Emp No: {selectedEmployee.employee_id}
+                                <Typography sx={{ fontSize: 18, fontWeight: 500 }}>{selectedEmployee.name}</Typography>
+                                <Typography sx={{ fontSize: 16, color: '#000000' }}>
+                                    {/* Location : {selectedEmployee.location} • */}
+                                     Emp No: {selectedEmployee.employee_id}
                                 </Typography>
                             </Box>
                             <IconButton>

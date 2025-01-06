@@ -85,11 +85,10 @@ const EmployeeDetails = () => {
                         {userDatas?.map((val) => (
                             <React.Fragment key={val.employee_id}>
                                 <InfoBox title={val.job_title} subtitle="Designation" />
-                                <InfoBox title="1,210" subtitle="Interest Income" />
+                                <InfoBox title={val.department} subtitle="Department" />
                                 <InfoBox title={val.age} subtitle="Age" />
-                                <InfoBox title="₹32k" subtitle="Rent" />
-                                <InfoBox title="Rented" subtitle="House" />
-                                <InfoBox title="IT" subtitle="Company" />
+                                <InfoBox title={val.gender} subtitle="Gender" />
+                                <InfoBox title={val.location} subtitle="Location" />
                                 <InfoBox title={val.marital_status} subtitle="Marital Status" />
                             </React.Fragment>
                         ))}
