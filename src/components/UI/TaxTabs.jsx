@@ -39,7 +39,7 @@ const TaxTabs = () => {
   return (
     <Box sx={{ width: "100%", margin: "auto", marginTop: 4, position: "relative", zIndex: 1 }}>
       {/* Dropdown for Financial Year */}
-      <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
+      <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2, width: "30%" }}>
         <InputLabel id="financial-year-label">Select Financial Year</InputLabel>
         <Select
           labelId="financial-year-label"
