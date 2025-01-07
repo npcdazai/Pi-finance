@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Grid, TextField } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import PropTypes from "prop-types";
 
 const HRASection = ({ financialYear, employeeId }) => {
   const [hraData, setHraData] = useState(null);
-  const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const formatToINR = (value) => {
@@ -47,70 +46,44 @@ const HRASection = ({ financialYear, employeeId }) => {
     fetchData();
   }, [financialYear, employeeId]);
 
-  const handleEditToggle = () => {
-    setIsEditable(!isEditable);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setHraData((prev) => ({ ...prev, [name]: value }));
-  };
-
   if (loading) return <Typography>Loading...</Typography>;
+
+  const getLabel = (key) => {
+    if (key === "state1") return "Rent Paid - 10% of Basic";
+    if (key === "state2") return "50% of Basic Salary";
+    return key.replace(/([A-Z])/g, " $1").replace(/^[a-z]/, (m) => m.toUpperCase());
+  };
 
   return (
     <Box sx={{ padding: 4, marginTop: 2, backgroundColor: "#f9f9f9", borderRadius: 2 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
-        <Typography variant="h5">HRA Exemption</Typography>
-        <Button
-          variant="outlined"
-          onClick={handleEditToggle}
-          sx={{
-            height: "40px",
-            width: "100px",
-            border: "none",
-            color: "#6941C6",
-            textTransform: "capitalize",
-          }}
-        >
-          {isEditable ? "Cancel" : "Edit"}
-        </Button>
-      </Box>
+      <Typography variant="h5" sx={{ marginBottom: 2 }}>
+        HRA Exemption
+      </Typography>
       <Grid container spacing={2}>
-        {hraData && Object.entries(hraData).map(([key, value]) => (
-          <Grid item xs={12} md={6} key={key}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                padding: 2,
-                border: "1px solid #e0e0e0",
-                borderRadius: 2,
-                boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)",
-                backgroundColor: "#fff",
-              }}
-            >
-              <Typography variant="subtitle2" sx={{ color: "#667085" }}>
-                {key.replace(/([A-Z])/g, " $1").replace(/^[a-z]/, (m) => m.toUpperCase())}
-              </Typography>
-              {isEditable ? (
-                <TextField
-                  variant="outlined"
-                  name={key}
-                  value={value}
-                  onChange={handleChange}
-                  placeholder="Enter Amount"
-                  size="small"
-                />
-              ) : (
+        {hraData &&
+          Object.entries(hraData).map(([key, value]) => (
+            <Grid item xs={12} md={6} key={key}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                  padding: 2,
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 2,
+                  boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.2)",
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ color: "#667085" }}>
+                  {getLabel(key)}
+                </Typography>
                 <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                   {typeof value === "number" ? formatToINR(value) : value}
                 </Typography>
-              )}
-            </Box>
-          </Grid>
-        ))}
+              </Box>
+            </Grid>
+          ))}
       </Grid>
     </Box>
   );
