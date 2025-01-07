@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import SalaryTable from "./UI/SalaryTable";
+import { AppContext } from "../context/AppContext";
 
 const SalaryDetails = () => {
+  const {setGrossSalaryInput , handleSave} = useContext(AppContext)
   const [isEditing, setIsEditing] = useState(false);
-  const [numericPart, setNumericPart] = useState(20); // Numeric CTC part in LPA
+  const [numericPart, setNumericPart] = useState(20);
 
   return (
     <div>
@@ -39,7 +41,7 @@ const SalaryDetails = () => {
                 <input
                   type="number"
                   value={numericPart}
-                  onChange={(e) => setNumericPart(e.target.value)}
+                  onChange={(e) => setGrossSalaryInput(e.target.value)}
                   style={{
                     flexGrow: 1,
                     marginRight: "8px",
@@ -56,9 +58,7 @@ const SalaryDetails = () => {
                     borderRadius: "4px",
                     cursor: "pointer",
                   }}
-                  onClick={() => {
-                    setIsEditing(false);
-                  }}
+                  onClick={handleSave}
                 >
                   Save
                 </button>

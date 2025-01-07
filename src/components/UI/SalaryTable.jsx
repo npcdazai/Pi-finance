@@ -35,7 +35,7 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
       />
       {label}
     </TableCell>
-    {rowData.map((cellData, index) => (
+    {rowData.slice().reverse().map((cellData, index) => (
       <TableCell
         key={index}
         align="right"
@@ -46,6 +46,7 @@ const SalaryRow = ({ label, rowData, isHighlighted }) => (
     ))}
   </TableRow>
 );
+
 
 const formatCurrency = (value) => {
   const num = parseFloat(value);
@@ -66,7 +67,7 @@ const FormatYearMonth = ({ isoDate }) => {
     }
 
     const date = new Date(dateString);
-    date.setMonth(date.getMonth() - 1);
+    date.setMonth(date.getMonth() ,-1); 
 
     return date.toLocaleString("en-US", {
       year: "numeric",
@@ -77,6 +78,8 @@ const FormatYearMonth = ({ isoDate }) => {
 
   return <div>{formatDate(isoDate)}</div>;
 };
+
+
 
 const SalaryTable = () => {
   // const [grossSalaryInput, setGrossSalaryInput] = useState("");
