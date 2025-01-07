@@ -40,7 +40,6 @@ const IncomeSection = ({ financialYear, employeeId }) => {
 
         setIncomeData({
           annualIncome: incomeData?.data?.annual_income || 0,
-          grossSalary: salaryData?.data || 0,
           houseProperty: incomeData?.data?.house_property || 0,
           otherSources: incomeData?.data?.other_sources || 0,
           interest: incomeData?.data?.interest || 0,
@@ -70,6 +69,8 @@ const IncomeSection = ({ financialYear, employeeId }) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
+      minimumFractionDigits: 0, // No decimals
+      maximumFractionDigits: 0, // No decimals
     }).format(value);
   };
 

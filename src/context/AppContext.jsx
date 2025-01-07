@@ -20,8 +20,13 @@ export const AppProvider = ({ children }) => {
     const [getusers, setUsers] = useState([]);
     const [userLoading, setUserLoading] = useState(true);
     const [getAllData, setAllData] = useState([])
+    const [grossSalary, setGrossSalary] = useState(null);
+    const [salaryScore, setSalaryScore] = useState(null);
+    const [taxDetails, setTaxDetails] = useState(null);
+    const [taxScorePercentage, setTaxScorePercentage] = useState(0);
+    const [grossSalaryInput, setGrossSalaryInput] = useState("");
+    const [updatedSalaryData, setUpdatedSalaryData] = useState(null);
 
-    // Fetch token function
     const getToken = async () => {
         if (token) return token;
 
@@ -90,7 +95,7 @@ export const AppProvider = ({ children }) => {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
-                    "source":"hr"
+                    "source": "hr",
                 },
                 body: JSON.stringify(payload),
             });
@@ -122,33 +127,82 @@ export const AppProvider = ({ children }) => {
 
     const apihost = "https://staging.getpi.in/backend/v1/hrms/hr/";
 
+    // const getUser = async (id) => {
+    //     setIsLoading(true);
+    //     setIsError(false);
+    //     try {
+    //         const response = await axios.get(`${apihost}/users/${id}`);
+
+    //         setAllData(response.data)
+    //         if (response.status === 200 && response.data?.data) {
+    //             const { data } = response.data;
+
+    //             const mappedData = data?.map(item => item?.userData || {});
+    //             const mappedTaxData = data?.map(item => item?.userTax || {});
+
+    //             setAllData(response.data);
+    //             setUserData(mappedData);
+    //             setUserTax(mappedTaxData);
+    //         }
+
+    //     }
+
+    //     catch (err) {
+    //         console.error("Error fetching user data:", err);
+    //         setIsError(true);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
+
     const getUser = async (id) => {
         setIsLoading(true);
         setIsError(false);
         try {
             const response = await axios.get(`${apihost}/users/${id}`);
 
-            setAllData(response.data)
             if (response.status === 200 && response.data?.data) {
                 const { data } = response.data;
 
-                const mappedData = data?.map(item => item?.userData || {});
-                const mappedTaxData = data?.map(item => item?.userTax || {});
+                const mappedData = data.map(item => item?.userData || {});
+                const mappedTaxData = data.map(item => item?.userTax || {});
 
                 setAllData(response.data);
                 setUserData(mappedData);
                 setUserTax(mappedTaxData);
             }
-
-        }
-
-        catch (err) {
+        } catch (err) {
             console.error("Error fetching user data:", err);
             setIsError(true);
         } finally {
             setIsLoading(false);
         }
     };
+
+    const updateSalary = async (grossSalaryInput , id ) => {
+        if (!grossSalaryInput) {
+            alert("Please enter a gross salary");
+            return;
+        }
+
+        try {
+            const response = await axios.put(
+                `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${id}`,
+                { gross_salary: grossSalaryInput }
+            );
+
+            if (response.status === 200) {
+                alert("Salary data updated successfully");
+                setUpdatedSalaryData(response.data.data);
+
+                getUser(id);
+            }
+        } catch (error) {
+            console.error("Error updating salary:", error);
+            alert("Failed to update salary data");
+        }
+    };
+
 
     const getUsers = async () => {
         try {
@@ -167,7 +221,7 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         getUser(selectedEmployee?.employee_id);
         getUsers();
-    }, [selectedEmployee?.employee_id]);
+    }, [selectedEmployee?.employee_id , updatedSalaryData ]);
 
     const updateEmployeeDetails = (updatedDetails) => {
         setSelectedEmployee((prev) => ({
@@ -177,9 +231,143 @@ export const AppProvider = ({ children }) => {
     };
 
 
-    console.log('====================================');
-    console.log(getAllData , "_____________");
-    console.log('====================================');
+    const handleSave = async () => {
+        if (!grossSalaryInput) {
+            alert("Please enter a gross salary");
+            return;
+        }
+
+        try {
+            const response = await axios.put(
+                "https://staging.getpi.in/backend/v1/hrms/hr/user/salary/E001",
+                {
+                    gross_salary: grossSalaryInput,
+                }
+            );
+
+            if (response.status === 200) {
+                alert("Salary data updated successfully");
+                setUpdatedSalaryData(response.data.data);
+            }
+        } catch (error) {
+            console.error("Error updating salary:", error);
+            alert("Failed to update salary data");
+        }
+    };
+
+    useEffect(() => {
+        if (!selectedEmployee) return; // Exit if no employee is selected
+
+        const fetchSalaryData = async () => {
+            try {
+                // Fetch user data (salary and tax-related details)
+                const userDataResponse = await fetch(
+                    `https://staging.getpi.in/backend/v1/hrms/hr/users/${selectedEmployee.employee_id}`
+                );
+                const userDataResult = await userDataResponse.json();
+
+                if (userDataResult.status_code === 200) {
+                    const userData = userDataResult.data[0];
+
+                    // Fetch gross salary
+                    const grossSalaryResponse = await fetch(
+                        'https://staging.getpi.in/backend/v1/hrms/hr/users/fetch/gross_annual_salary/' + selectedEmployee.employee_id,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ year: '2022-23' }),
+                        }
+                    );
+
+                    const grossSalaryResult = await grossSalaryResponse.json();
+                    if (grossSalaryResult.status_code === 200) {
+                        const fetchedGrossSalary = grossSalaryResult.data;
+                        setGrossSalary(fetchedGrossSalary);
+
+                        // Fetch salary score using gross salary
+                        const salaryScoreResponse = await fetch(
+                            'https://staging.getpi.in/backend/v1/hrms/tax/salary_score',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ salary: fetchedGrossSalary.toString() }),
+                            }
+                        );
+
+                        const salaryScoreResult = await salaryScoreResponse.json();
+                        if (salaryScoreResult.status_code === 200) {
+                            setSalaryScore(salaryScoreResult.data.salary_score);
+                        }
+
+                        // Prepare tax calculation data dynamically from userData
+                        const taxCalculationResponse = await fetch(
+                            'https://staging.getpi.in/backend/v1/hrms/tax/tax_calculation',
+                            {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    totalSalary: fetchedGrossSalary,
+                                    basicSalary: userData.userSalary[0].basic_salary,
+                                    hra: userData.userSalary[0].hra,
+                                    ltaAllowance: userData.userSalary[0].lta,
+                                    foodAllowance: 0,
+                                    rentPaid: userData.userTax[0].HRA.rent_amount_annual,
+                                    metroCity: userData.userData.location === 'Mumbai',
+                                    homeLoanInterest: userData.userTax[0].section_24b.interest_on_home_loan,
+                                    lifeInsurance: userData.userTax[0]["80C"].life_insurance,
+                                    elss: userData.userTax[0]["80C"].ELSS,
+                                    providentFund: userData.userSalary[0].pf_contribution,
+                                    taxSavingFDs: 0,
+                                    otherTaxSavingInvestment: 0,
+                                    nps: userData.userTax[0]["80CCD"].NPS,
+                                    healthInsuranceSelfSpouse: userData.userTax[0]["80D"].health_insurance_for_self_and_family,
+                                    healthInsuranceParents: userData.userTax[0]["80D"].health_insurance_for_parents,
+                                    selfOrSpouseIsSenior: false,
+                                    seniorCitizenParents: false,
+                                    preventiveHealthCareExpenditure: 0,
+                                    interestPaidOnEducationLoan: 0,
+                                    interestOnHousingLoan80EE: 0,
+                                    donations80G: userData.userTax[0]["80G"].donations,
+                                    interestIncomeSavingsAccount: 0,
+                                    gratuity: 0,
+                                    medicalAllowance: 0,
+                                }),
+                            }
+                        );
+
+                        const taxCalculationResult = await taxCalculationResponse.json();
+                        if (taxCalculationResult.status_code === 200) {
+                            setTaxDetails(taxCalculationResult.data.response);
+                            // Convert the tax score into a percentage
+                            const totalTaxPayable = taxCalculationResult.data.response.newRegime?.totalTaxPayable || 5000; // Dummy value if undefined
+
+                            // Ensure maxTaxPayable is not zero
+                            const maxTaxPayable = grossSalaryResult.data * 0.3; // Assuming a max tax payable of 30% of gross salary
+
+                            // Avoid division by zero
+                            if (maxTaxPayable > 0) {
+                                const calculatedTaxScore = ((maxTaxPayable - totalTaxPayable) / maxTaxPayable) * 100;
+                                setTaxScorePercentage(calculatedTaxScore.toFixed(2)); // Set the tax score as a percentage
+                            } else {
+                                setTaxScorePercentage(0); // Set 0% if maxTaxPayable is zero or invalid
+                            }
+
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching salary and tax data:', error);
+            }
+        };
+
+        fetchSalaryData();
+    }, [selectedEmployee]);
 
     return (
         <AppContext.Provider value={{
@@ -195,7 +383,19 @@ export const AppProvider = ({ children }) => {
             handleSendMessage,
             getusers,
             getAllData,
-            setIsLoading
+            setIsLoading,
+            salaryScore,
+            taxScorePercentage,
+            setSalaryScore,
+            setGrossSalary,
+            setTaxDetails,
+            grossSalary,
+            setTaxScorePercentage,
+            setUpdatedSalaryData,
+            setGrossSalaryInput,
+            grossSalaryInput,
+            updatedSalaryData,
+            handleSave
         }}>
             {children}
         </AppContext.Provider>

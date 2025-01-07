@@ -1,7 +1,11 @@
-import React from 'react';
-import { Box, Card, Typography } from '@mui/material';
+import React, { useEffect, useState, useContext } from 'react';
+import { Box, Typography } from '@mui/material';
 import pfp from '../../../public/images/logo/piLogo.png';
+import { AppContext } from '../../context/AppContext';
+
 export default function TaxCards() {
+    const { selectedEmployee, setTaxScorePercentage, taxScorePercentage, salaryScore, setSalaryScore, setGrossSalary, taxDetails, setTaxDetails, grossSalary } = useContext(AppContext);
+
     return (
         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }} >
             <Box
@@ -37,10 +41,10 @@ export default function TaxCards() {
                     You’re in top
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                    1%
+                    {salaryScore !== null ? salaryScore + "%" : "Loading..."} {/* Display salary score */}
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                    Salary Bracket
+                    Salary Score
                 </Typography>
             </Box>
             <Box
@@ -80,7 +84,6 @@ export default function TaxCards() {
                         borderRadius: '24px',
                         padding: '4px',
                         paddingX: "8px",
-                        // marginBottom: '12px',
                         width: 'fit-content',
                         height: "28px"
                     }}
@@ -91,13 +94,12 @@ export default function TaxCards() {
                     </Typography>
                 </Box>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                    82%
+                    {taxScorePercentage ? taxScorePercentage + "%" : "10%"} {/* Display tax score percentage */}
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
                     Tax Score
                 </Typography>
             </Box>
-
         </Box>
     );
 }
