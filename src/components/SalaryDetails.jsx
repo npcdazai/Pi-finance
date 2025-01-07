@@ -27,10 +27,10 @@ const SalaryDetails = () => {
           </Box>
 
 
-          <Box sx={{ marginBottom: 2, width: "50%", display: "flex", flexDirection: "row", gap: 2 }}>
-            <Typography>Enter New Gross Salary</Typography>
+          <Box sx={{ marginBottom: 2, width: "25%", display: "flex", flexDirection: "row", gap: 2 }}>
+            {/* <Typography>Enter New Gross Salary</Typography> */}
             <TextField
-              label="New Gross Salary"
+              label="Annual CTC"
               value={grossSalaryInput}
               onChange={(e) => setGrossSalaryInput(e.target.value)}
               placeholder="Enter amount"
