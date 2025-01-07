@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import SalaryTable from "./UI/SalaryTable";
+import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
 const SalaryDetails = () => {
-  const {setGrossSalaryInput , handleSave} = useContext(AppContext)
   const [isEditing, setIsEditing] = useState(false);
   const [numericPart, setNumericPart] = useState(20);
+  const { grossSalaryInput, handleSave, setGrossSalaryInput } = useContext(AppContext)
 
   return (
     <div>
@@ -24,66 +25,39 @@ const SalaryDetails = () => {
               View your Salary Structure
             </Typography>
           </Box>
-          <Box
-            sx={{
-              border: "1px solid",
-              borderColor: "grey.400",
-              borderRadius: 2,
-              padding: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: isEditing ? "auto" : "250px",
-            }}
-          >
-            {isEditing ? (
-              <>
-                <input
-                  type="number"
-                  value={numericPart}
-                  onChange={(e) => setGrossSalaryInput(e.target.value)}
-                  style={{
-                    flexGrow: 1,
-                    marginRight: "8px",
-                    border: "none",
-                    outline: "none",
-                  }}
-                />
-                <button
-                  style={{
-                    padding: "4px 8px",
-                    background: "#1976d2",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                  onClick={handleSave}
-                >
-                  Save
-                </button>
-              </>
-            ) : (
-              <>
-                <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  INR {numericPart} LPA
-                </Typography>
-                <button
-                  style={{
-                    padding: "4px 8px",
-                    background: "transparent",
-                    border: "1px solid #1976d2",
-                    borderRadius: "4px",
-                    color: "#1976d2",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setIsEditing(true)}
-                >
-                  Edit
-                </button>
-              </>
-            )}
+
+
+          <Box sx={{ marginBottom: 2, width: "50%", display: "flex", flexDirection: "row", gap: 2 }}>
+            <Typography>Enter New Gross Salary</Typography>
+            <TextField
+              label="New Gross Salary"
+              value={grossSalaryInput}
+              onChange={(e) => setGrossSalaryInput(e.target.value)}
+              placeholder="Enter amount"
+              fullWidth
+              variant="outlined"
+              sx={{
+                height: "40px",
+                "& .MuiInputBase-root": {
+                  height: "40px",
+                  padding: "0 14px",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#cccccc",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#666666",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#1976d2",
+                },
+              }}
+            />
+            <Button sx={{ height: "40px" }} onClick={handleSave} variant="contained" color="primary">
+              Save
+            </Button>
           </Box>
+
         </Box>
         <SalaryTable numericPart={numericPart} />
       </Box>

@@ -234,7 +234,7 @@ const SalaryTable = () => {
         overflowX: "auto",
       }}
     >
-      <Box sx={{ marginBottom: 2 }}>
+      {/* <Box sx={{ marginBottom: 2 }}>
         <Typography variant="h6">Enter New Gross Salary</Typography>
         <TextField
           label="New Gross Salary"
@@ -246,7 +246,7 @@ const SalaryTable = () => {
         <Button onClick={handleSave} variant="contained" color="primary">
           Save
         </Button>
-      </Box>
+      </Box> */}
 
       <TableContainer
         component={Paper}
