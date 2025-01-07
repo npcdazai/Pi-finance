@@ -33,11 +33,11 @@ const SalaryDetails = () => {
               label="Annual CTC"
               value={grossSalaryInput}
               onChange={(e) => setGrossSalaryInput(e.target.value)}
-              placeholder="Enter amount"
+              placeholder="20000000"
               fullWidth
               variant="outlined"
               sx={{
-                height: "40px",
+                height: "50px",
                 "& .MuiInputBase-root": {
                   height: "40px",
                   padding: "0 14px",
