@@ -5,8 +5,13 @@ import { AppContext } from "../context/AppContext";
 
 const SalaryDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [numericPart, setNumericPart] = useState(20);
   const { grossSalaryInput, handleSave, setGrossSalaryInput } = useContext(AppContext);
+
+  // Format the numeric input to "LPA" (no decimals)
+  const formatToLPA = (value) => {
+    if (!value || isNaN(value)) return "0 LPA";
+    return `${Math.floor(value / 100000)} LPA`; // Convert to LPA and round down to the nearest whole number
+  };
 
   return (
     <div>
@@ -59,7 +64,10 @@ const SalaryDetails = () => {
                     borderRadius: "4px",
                     cursor: "pointer",
                   }}
-                  onClick={handleSave}
+                  onClick={() => {
+                    handleSave(); // Save the new value
+                    setIsEditing(false); // Switch back to non-editable state
+                  }}
                 >
                   Save
                 </button>
@@ -67,7 +75,7 @@ const SalaryDetails = () => {
             ) : (
               <>
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  INR {numericPart} LPA
+                  INR {formatToLPA(grossSalaryInput)}
                 </Typography>
                 <button
                   style={{
@@ -86,7 +94,7 @@ const SalaryDetails = () => {
             )}
           </Box>
         </Box>
-        <SalaryTable numericPart={numericPart} />
+        <SalaryTable numericPart={grossSalaryInput} />
       </Box>
     </div>
   );
