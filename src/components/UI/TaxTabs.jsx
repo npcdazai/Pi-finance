@@ -47,6 +47,7 @@ const TaxTabs = () => {
           onChange={handleYearChange}
           label="Select Financial Year"
         >
+          <MenuItem value={"2024-2025"}>2024-2025</MenuItem>
           <MenuItem value={"2023-2024"}>2023-2024</MenuItem>
           <MenuItem value={"2022-2023"}>2022-2023</MenuItem>
           <MenuItem value={"2021-2022"}>2021-2022</MenuItem>
