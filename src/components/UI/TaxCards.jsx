@@ -54,7 +54,7 @@ export default function TaxCards() {
                     {salaryScore !== null ? Math.round(salaryScore) + '%' : 'Loading...'} {/* Display salary score */}
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                    Salary Score
+                    Salary Score 
                 </Typography>
             </Box>
             <Box
