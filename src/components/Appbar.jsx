@@ -16,6 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { styled } from '@mui/material/styles';
 import logo from '../../public/images/logo/piLogo.png';
 
@@ -25,7 +26,6 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: '#fff',
   padding: '0 2rem',
 }));
-
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -89,6 +89,22 @@ export default function Appbar() {
     setDrawerOpen(open);
   };
 
+  const handleRefresh = async () => {
+    try {
+      const response = await fetch('https://staging.getpi.in/backend/v1/hrms/hr/user/refresh_data', {
+        method: 'PUT',
+      });
+      if (response.ok) {
+        console.log('Data refreshed successfully');
+        // You can also add additional handling here if needed (e.g., showing a success message)
+      } else {
+        console.error('Failed to refresh data');
+      }
+    } catch (error) {
+      console.error('Error while refreshing data:', error);
+    }
+  };
+
   const drawerContent = (
     <Box
       sx={{ width: drawerWidth }}
@@ -114,6 +130,12 @@ export default function Appbar() {
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary="Settings" />
+        </ListItem>
+        <ListItem button onClick={handleRefresh}>
+          <ListItemIcon>
+            <RefreshIcon />
+          </ListItemIcon>
+          <ListItemText primary="Refresh" />
         </ListItem>
       </List>
       <Divider />
@@ -166,4 +188,3 @@ export default function Appbar() {
     </Box>
   );
 }
-

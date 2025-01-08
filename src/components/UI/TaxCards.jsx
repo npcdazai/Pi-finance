@@ -1,13 +1,23 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Box, Typography } from '@mui/material';
 import pfp from '../../../public/images/logo/piLogo.png';
 import { AppContext } from '../../context/AppContext';
 
 export default function TaxCards() {
-    const { selectedEmployee, setTaxScorePercentage, taxScorePercentage, salaryScore, setSalaryScore, setGrossSalary, taxDetails, setTaxDetails, grossSalary } = useContext(AppContext);
+    const {
+        selectedEmployee,
+        setTaxScorePercentage,
+        taxScorePercentage,
+        salaryScore,
+        setSalaryScore,
+        setGrossSalary,
+        taxDetails,
+        setTaxDetails,
+        grossSalary,
+    } = useContext(AppContext);
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 2 }} >
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 2 }}>
             <Box
                 sx={{
                     backgroundColor: '#865DDB',
@@ -41,7 +51,7 @@ export default function TaxCards() {
                     You’re in top
                 </Typography>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                    {salaryScore !== null ? salaryScore + "%" : "Loading..."} {/* Display salary score */}
+                    {salaryScore !== null ? Math.round(salaryScore) + '%' : 'Loading...'} {/* Display salary score */}
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
                     Salary Score
@@ -83,9 +93,9 @@ export default function TaxCards() {
                         backgroundColor: 'rgba(255, 255, 255, 0.3)',
                         borderRadius: '24px',
                         padding: '4px',
-                        paddingX: "8px",
+                        paddingX: '8px',
                         width: 'fit-content',
-                        height: "28px"
+                        height: '28px',
                     }}
                 >
                     <img src={pfp} alt="Efficient" style={{ width: '24px', height: '24px' }} />
@@ -94,7 +104,7 @@ export default function TaxCards() {
                     </Typography>
                 </Box>
                 <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                    {taxScorePercentage ? taxScorePercentage + "%" : "10%"} {/* Display tax score percentage */}
+                    {taxScorePercentage ? Math.round(taxScorePercentage) + '%' : '10%'} {/* Display tax score percentage */}
                 </Typography>
                 <Typography variant="h6" sx={{ opacity: 0.9 }}>
                     Tax Score
