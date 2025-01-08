@@ -40,6 +40,7 @@ const SalaryDetails = () => {
               alignItems: "center",
               justifyContent: "space-between",
               width: isEditing ? "auto" : "250px",
+              
             }}
           >
             {isEditing ? (
