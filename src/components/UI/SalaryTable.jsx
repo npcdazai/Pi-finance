@@ -254,7 +254,7 @@ const SalaryTable = () => {
       >
         <Table stickyHeader>
           <TableHead>
-            <TableRow>
+            <TableRow >
               <TableCell
                 sx={{
                   display: "flex",
@@ -265,6 +265,7 @@ const SalaryTable = () => {
                   top: 0,
                   backgroundColor: "#fff",
                   zIndex: 3,
+                  width:"140px",
                 }}
               >
                 Salary Structure
