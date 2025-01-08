@@ -37,7 +37,7 @@ const IncomeSection = ({ financialYear, employeeId }) => {
           }
         );
         const salaryData = await salaryResponse.json();
-
+        console.log(incomeData);
         setIncomeData({
           annualIncome: incomeData?.data?.annual_income || 0,
           houseProperty: incomeData?.data?.house_property || 0,

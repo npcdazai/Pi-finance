@@ -85,7 +85,7 @@ const TaxTabs = () => {
       {/* Form */}
       <Box sx={{ marginTop: 4 }}>
         {selectedTab === 0 && (
-          <IncomeSection financialYear={financialYear} employeeId={employeeId} />
+          <IncomeSection financialYear={formattedFinancialYear} employeeId={employeeId} />
         )}
         {selectedTab === 1 && formattedFinancialYear && (
           <Box>
