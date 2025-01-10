@@ -279,12 +279,18 @@ export const AppProvider = ({ children }) => {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ year: userData.userTax[0].fy }),
+                        body: JSON.stringify({ year: userData.userTax[3].fy }),
                     }
                 );
 
+
+                console.error(userData.userTax[3].fy)
             
                 const grossSalaryResult = await grossSalaryResponse.json();
+
+                console.warn(grossSalaryResult);
+                
+
                 if (grossSalaryResult.status_code === 200) {
                     const fetchedGrossSalary = grossSalaryResult.data;
                     setGrossSalary(fetchedGrossSalary);

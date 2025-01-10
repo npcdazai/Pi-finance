@@ -13,13 +13,13 @@ const formatFinancialYear = (year) => {
   }
 
   const [startYear, endYear] = year.split("-");
-  return `${startYear}-${endYear.slice(2)}`;  // Formatting as yyyy-yy
+  return `${startYear}-${endYear.slice(2)}`;  
 };
 
 const TaxTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [financialYear, setFinancialYear] = useState("2023-2024");
-  const [formattedFinancialYear, setFormattedFinancialYear] = useState("2023-24");  // State to hold the formatted year
+  const [formattedFinancialYear, setFormattedFinancialYear] = useState("2024-25"); 
   const { userDatas, selectedEmployee, setSelectedEmployee, getusers } = useContext(AppContext);
   const employeeId = selectedEmployee?.employee_id;
 
