@@ -284,7 +284,6 @@ export const AppProvider = ({ children }) => {
                     // ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
                     
-
                     const grossSalaryResult = await grossSalaryResponse.json();
                     if (grossSalaryResult.status_code === 200) {
                         const fetchedGrossSalary = grossSalaryResult.data;
@@ -298,7 +297,7 @@ export const AppProvider = ({ children }) => {
                                 headers: {
                                     'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify({ salary: fetchedGrossSalary.toString() }),
+                                body: JSON.stringify({ salary: fetchedGrossSalary.toString()}),
                             }
                         );
 
@@ -347,22 +346,15 @@ export const AppProvider = ({ children }) => {
                         
 
                         const taxCalculationResult = await taxCalculationResponse.json();
+                        console.log(taxCalculationResult?.data?.response.taxScore)
+
+                        // data.response.taxScore
+
                         if (taxCalculationResult.status_code === 200) {
                             setTaxDetails(taxCalculationResult.data.response);
-                            // Convert the tax score into a percentage
-                            const totalTaxPayable = taxCalculationResult.data.response.newRegime?.totalTaxPayable || 5000; // Dummy value if undefined
-
-                            // Ensure maxTaxPayable is not zero
-                            const maxTaxPayable = grossSalaryResult.data * 0.3; // Assuming a max tax payable of 30% of gross salary
-
+                            setTaxScorePercentage(taxCalculationResult?.data?.response.taxScore);
                             // Avoid division by zero
-                            if (maxTaxPayable > 0) {
-                                const calculatedTaxScore = ((maxTaxPayable - totalTaxPayable) / maxTaxPayable) * 100;
-                                setTaxScorePercentage(calculatedTaxScore.toFixed(2)); // Set the tax score as a percentage
-                            } else {
-                                setTaxScorePercentage(0); // Set 0% if maxTaxPayable is zero or invalid
-                            }
-
+                      
                         }
                     }
                 }
@@ -372,7 +364,7 @@ export const AppProvider = ({ children }) => {
         };
 
         fetchSalaryData();
-    }, [selectedEmployee]);
+    }, [selectedEmployee ]);
 
     return (
         <AppContext.Provider value={{

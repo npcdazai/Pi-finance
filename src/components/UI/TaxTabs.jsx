@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Typography, Grid, TextField, Button, Tabs, Tab, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import IncomeSection from "./IncomeSection";
 import DeductionSection from "./DeductionSection";
 import HRASection from "./HRASection";
+import { AppContext } from "../../context/AppContext";
 
 // Helper function to format the financial year from yyyy-yyyy to yyyy-yy
 const formatFinancialYear = (year) => {
@@ -19,7 +20,8 @@ const TaxTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [financialYear, setFinancialYear] = useState("2023-2024");
   const [formattedFinancialYear, setFormattedFinancialYear] = useState("2023-24");  // State to hold the formatted year
-  const employeeId = "E001";
+  const { userDatas, selectedEmployee, setSelectedEmployee, getusers } = useContext(AppContext);
+  const employeeId = selectedEmployee?.employee_id;
 
   // Handle tab change
   const handleTabChange = (event, newValue) => {
