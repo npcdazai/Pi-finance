@@ -348,13 +348,11 @@ export const AppProvider = ({ children }) => {
                         const taxCalculationResult = await taxCalculationResponse.json();
                         console.log(taxCalculationResult?.data?.response.taxScore)
 
-                        // data.response.taxScore
 
                         if (taxCalculationResult.status_code === 200) {
                             setTaxDetails(taxCalculationResult.data.response);
                             setTaxScorePercentage(taxCalculationResult?.data?.response.taxScore);
                             // Avoid division by zero
-                      
                         }
                     }
                 }
