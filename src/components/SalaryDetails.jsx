@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import SalaryTable from "./UI/SalaryTable";
 import { AppContext } from "../context/AppContext";
 
 const SalaryDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const { grossSalaryInput, handleSave, setGrossSalaryInput } = useContext(AppContext);
+  const { grossSalaryInput, handleSave, setGrossSalaryInput,grossSalary } = useContext(AppContext);
 
   // Format the numeric input to "LPA" (no decimals)
   const formatToLPA = (value) => {
@@ -40,7 +40,6 @@ const SalaryDetails = () => {
               alignItems: "center",
               justifyContent: "space-between",
               width: isEditing ? "auto" : "250px",
-              
             }}
           >
             {isEditing ? (
@@ -76,7 +75,7 @@ const SalaryDetails = () => {
             ) : (
               <>
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  INR {formatToLPA(grossSalaryInput)}
+                  INR {formatToLPA(grossSalary)}
                 </Typography>
                 <button
                   style={{

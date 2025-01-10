@@ -18,9 +18,9 @@ const formatFinancialYear = (year) => {
 
 const TaxTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [financialYear, setFinancialYear] = useState("2023-2024");
+  const [financialYear, setFinancialYear] = useState("2024-2025");
   const [formattedFinancialYear, setFormattedFinancialYear] = useState("2024-25"); 
-  const { userDatas, selectedEmployee, setSelectedEmployee, getusers } = useContext(AppContext);
+  const { userDatas, selectedEmployee, setSelectedEmployee, getusers, refreshTrigger } = useContext(AppContext);
   const employeeId = selectedEmployee?.employee_id;
 
   // Handle tab change
@@ -88,7 +88,7 @@ const TaxTabs = () => {
       {/* Form */}
       <Box sx={{ marginTop: 4 }}>
         {selectedTab === 0 && (
-          <IncomeSection financialYear={formattedFinancialYear} employeeId={employeeId} />
+          <IncomeSection financialYear={formattedFinancialYear} employeeId={employeeId} refreshTrigger={refreshTrigger}/>
         )}
         {selectedTab === 1 && formattedFinancialYear && (
           <Box>

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Box, Typography, Button, Grid, TextField } from "@mui/material";
 import PropTypes from "prop-types";
+import { AppContext } from "../../context/AppContext";
 
 const IncomeSection = ({ financialYear, employeeId }) => {
   const [incomeData, setIncomeData] = useState({
@@ -14,6 +15,7 @@ const IncomeSection = ({ financialYear, employeeId }) => {
   });
   const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(true);
+  const {refreshTrigger} = useContext(AppContext)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +56,7 @@ const IncomeSection = ({ financialYear, employeeId }) => {
     };
 
     fetchData();
-  }, [financialYear, employeeId]);
+  }, [financialYear, employeeId, refreshTrigger]);
 
   const handleEditToggle = () => {
     setIsEditable(!isEditable);
