@@ -179,29 +179,30 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    const updateSalary = async (grossSalaryInput , id ) => {
-        if (!grossSalaryInput) {
-            alert("Please enter a gross salary");
-            return;
-        }
+    // const updateSalary = async (grossSalaryInput , id ) => {
+    //     if (!grossSalaryInput) {
+    //         alert("Please enter a gross salary");
+    //         return;
+    //     }
 
-        try {
-            const response = await axios.put(
-                `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${selectedEmployee.employee_id}`,
-                { gross_salary: grossSalaryInput }
-            );
+    //     try {
+    //         const response = await axios.put(
+    //             `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${id}`,
+    //             { gross_salary: grossSalaryInput }
+    //         );
 
-            if (response.status === 200) {
-                alert("Salary data updated successfully");
-                setUpdatedSalaryData(response.data.data);
+    //         if (response.status === 200) {
+    //             alert("Salary data updated successfully");
+    //             setUpdatedSalaryData(response.data.data);
 
-                getUser(id);
-            }
-        } catch (error) {
-            console.error("Error updating salary:", error);
-            alert("Failed to update salary data");
-        }
-    };
+    //             getUser(id);
+    //             fetchSalaryData();
+    //         }
+    //     } catch (error) {
+    //         console.error("Error updating salary:", error);
+    //         alert("Failed to update salary data");
+    //     }
+    // };
 
     // ANUAL CTC
 
@@ -222,6 +223,7 @@ export const AppProvider = ({ children }) => {
     useEffect(() => {
         getUser(selectedEmployee?.employee_id);
         getUsers();
+        
     }, [selectedEmployee?.employee_id , updatedSalaryData ]);
 
     const updateEmployeeDetails = (updatedDetails) => {
@@ -249,6 +251,7 @@ export const AppProvider = ({ children }) => {
             if (response.status === 200) {
                 alert("Salary data updated successfully");
                 setUpdatedSalaryData(response.data.data);
+                fetchSalaryData();
             }
         } catch (error) {
             console.error("Error updating salary:", error);
@@ -256,113 +259,112 @@ export const AppProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        if (!selectedEmployee) return; 
+    
+    const fetchSalaryData = async () => {
+        try {
+            // Fetch user data (salary and tax-related details)
+            const userDataResponse = await fetch(
+                `https://staging.getpi.in/backend/v1/hrms/hr/users/${selectedEmployee.employee_id}`
+            );
+            const userDataResult = await userDataResponse.json();
 
-        const fetchSalaryData = async () => {
-            try {
-                // Fetch user data (salary and tax-related details)
-                const userDataResponse = await fetch(
-                    `https://staging.getpi.in/backend/v1/hrms/hr/users/${selectedEmployee.employee_id}`
+            if (userDataResult.status_code === 200) {
+                const userData = userDataResult.data[0];
+
+                // Fetch gross salary
+                const grossSalaryResponse = await fetch(
+                    'https://staging.getpi.in/backend/v1/hrms/hr/users/fetch/gross_annual_salary/' + selectedEmployee.employee_id,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ year: userData.userTax[0].fy }),
+                    }
                 );
-                const userDataResult = await userDataResponse.json();
 
-                if (userDataResult.status_code === 200) {
-                    const userData = userDataResult.data[0];
+            
+                const grossSalaryResult = await grossSalaryResponse.json();
+                if (grossSalaryResult.status_code === 200) {
+                    const fetchedGrossSalary = grossSalaryResult.data;
+                    setGrossSalary(fetchedGrossSalary);
 
-                    // Fetch gross salary
-                    const grossSalaryResponse = await fetch(
-                        'https://staging.getpi.in/backend/v1/hrms/hr/users/fetch/gross_annual_salary/' + selectedEmployee.employee_id,
+                    // Fetch salary score using gross salary
+                    const salaryScoreResponse = await fetch(
+                        'https://staging.getpi.in/backend/v1/hrms/tax/salary_score',
                         {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ year: userData.userTax[0].fy }),
+                            body: JSON.stringify({ salary: fetchedGrossSalary.toString()}),
                         }
                     );
-                    // ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 
+                    const salaryScoreResult = await salaryScoreResponse.json();
+                    if (salaryScoreResult.status_code === 200) {
+                        setSalaryScore(salaryScoreResult.data.salary_score);
+                    }
+
+                    // Prepare tax calculation data dynamically from userData
+                    const taxCalculationResponse = await fetch(
+                        'https://staging.getpi.in/backend/v1/hrms/tax/tax_calculation',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                totalSalary: fetchedGrossSalary,
+                                basicSalary: userData.userSalary[0].basic_salary,
+                                hra: userData.userSalary[0].hra,
+                                ltaAllowance: userData.userSalary[0].lta,
+                                foodAllowance: 0,
+                                rentPaid: userData.userTax[0].HRA.rent_amount_annual,
+                                metroCity: userData.userData.location === 'Mumbai',
+                                homeLoanInterest: userData.userTax[0].section_24b.interest_on_home_loan,
+                                lifeInsurance: userData.userTax[0]["80C"].life_insurance,
+                                elss: userData.userTax[0]["80C"].ELSS,
+                                providentFund: userData.userSalary[0].pf_contribution,
+                                taxSavingFDs: 0,
+                                otherTaxSavingInvestment: 0,
+                                nps: userData.userTax[0]["80CCD"].NPS,
+                                healthInsuranceSelfSpouse: userData.userTax[0]["80D"].health_insurance_for_self_and_family,
+                                healthInsuranceParents: userData.userTax[0]["80D"].health_insurance_for_parents,
+                                selfOrSpouseIsSenior: false,
+                                seniorCitizenParents: false,
+                                preventiveHealthCareExpenditure: 0,
+                                interestPaidOnEducationLoan: 0,
+                                interestOnHousingLoan80EE: 0,
+                                donations80G: userData.userTax[0]["80G"].donations,
+                                interestIncomeSavingsAccount: 0,
+                                gratuity: 0,
+                                medicalAllowance: 0,
+                            }),
+                        }
+                    );
                     
-                    const grossSalaryResult = await grossSalaryResponse.json();
-                    if (grossSalaryResult.status_code === 200) {
-                        const fetchedGrossSalary = grossSalaryResult.data;
-                        setGrossSalary(fetchedGrossSalary);
 
-                        // Fetch salary score using gross salary
-                        const salaryScoreResponse = await fetch(
-                            'https://staging.getpi.in/backend/v1/hrms/tax/salary_score',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ salary: fetchedGrossSalary.toString()}),
-                            }
-                        );
-
-                        const salaryScoreResult = await salaryScoreResponse.json();
-                        if (salaryScoreResult.status_code === 200) {
-                            setSalaryScore(salaryScoreResult.data.salary_score);
-                        }
-
-                        // Prepare tax calculation data dynamically from userData
-                        const taxCalculationResponse = await fetch(
-                            'https://staging.getpi.in/backend/v1/hrms/tax/tax_calculation',
-                            {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    totalSalary: fetchedGrossSalary,
-                                    basicSalary: userData.userSalary[0].basic_salary,
-                                    hra: userData.userSalary[0].hra,
-                                    ltaAllowance: userData.userSalary[0].lta,
-                                    foodAllowance: 0,
-                                    rentPaid: userData.userTax[0].HRA.rent_amount_annual,
-                                    metroCity: userData.userData.location === 'Mumbai',
-                                    homeLoanInterest: userData.userTax[0].section_24b.interest_on_home_loan,
-                                    lifeInsurance: userData.userTax[0]["80C"].life_insurance,
-                                    elss: userData.userTax[0]["80C"].ELSS,
-                                    providentFund: userData.userSalary[0].pf_contribution,
-                                    taxSavingFDs: 0,
-                                    otherTaxSavingInvestment: 0,
-                                    nps: userData.userTax[0]["80CCD"].NPS,
-                                    healthInsuranceSelfSpouse: userData.userTax[0]["80D"].health_insurance_for_self_and_family,
-                                    healthInsuranceParents: userData.userTax[0]["80D"].health_insurance_for_parents,
-                                    selfOrSpouseIsSenior: false,
-                                    seniorCitizenParents: false,
-                                    preventiveHealthCareExpenditure: 0,
-                                    interestPaidOnEducationLoan: 0,
-                                    interestOnHousingLoan80EE: 0,
-                                    donations80G: userData.userTax[0]["80G"].donations,
-                                    interestIncomeSavingsAccount: 0,
-                                    gratuity: 0,
-                                    medicalAllowance: 0,
-                                }),
-                            }
-                        );
-                        
-
-                        const taxCalculationResult = await taxCalculationResponse.json();
-                        console.log(taxCalculationResult?.data?.response.taxScore)
+                    const taxCalculationResult = await taxCalculationResponse.json();
+                    console.log(taxCalculationResult?.data?.response.taxScore)
 
 
-                        if (taxCalculationResult.status_code === 200) {
-                            setTaxDetails(taxCalculationResult.data.response);
-                            setTaxScorePercentage(taxCalculationResult?.data?.response.taxScore);
-                            // Avoid division by zero
-                        }
+                    if (taxCalculationResult.status_code === 200) {
+                        setTaxDetails(taxCalculationResult.data.response);
+                        setTaxScorePercentage(taxCalculationResult?.data?.response.taxScore);
+                        // Avoid division by zero
                     }
                 }
-            } catch (error) {
-                console.error('Error fetching salary and tax data:', error);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching salary and tax data:', error);
+        }
+    };
 
+    useEffect(() => {
+        if (!selectedEmployee) return; 
         fetchSalaryData();
-    }, [selectedEmployee ]);
+    }, [selectedEmployee]);
 
     return (
         <AppContext.Provider value={{
