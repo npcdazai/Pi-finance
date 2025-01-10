@@ -187,7 +187,7 @@ export const AppProvider = ({ children }) => {
 
         try {
             const response = await axios.put(
-                `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${id}`,
+                `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${selectedEmployee.employee_id}`,
                 { gross_salary: grossSalaryInput }
             );
 
@@ -203,6 +203,7 @@ export const AppProvider = ({ children }) => {
         }
     };
 
+    // ANUAL CTC
 
     const getUsers = async () => {
         try {
@@ -239,7 +240,7 @@ export const AppProvider = ({ children }) => {
 
         try {
             const response = await axios.put(
-                "https://staging.getpi.in/backend/v1/hrms/hr/user/salary/E001",
+                `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${selectedEmployee.employee_id}`,
                 {
                     gross_salary: grossSalaryInput,
                 }
@@ -256,7 +257,7 @@ export const AppProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        if (!selectedEmployee) return; // Exit if no employee is selected
+        if (!selectedEmployee) return; 
 
         const fetchSalaryData = async () => {
             try {
@@ -277,9 +278,12 @@ export const AppProvider = ({ children }) => {
                             headers: {
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({ year: '2022-23' }),
+                            body: JSON.stringify({ year: userData.userTax[0].fy }),
                         }
                     );
+                    // ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+                    
 
                     const grossSalaryResult = await grossSalaryResponse.json();
                     if (grossSalaryResult.status_code === 200) {
@@ -340,6 +344,7 @@ export const AppProvider = ({ children }) => {
                                 }),
                             }
                         );
+                        
 
                         const taxCalculationResult = await taxCalculationResponse.json();
                         if (taxCalculationResult.status_code === 200) {
