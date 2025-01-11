@@ -69,9 +69,10 @@ const ChatBot = () => {
     };
 
     const formatBotResponse = (text) => {
-        const formattedText = text.split("\n").map((line, index) => (
+        const parts = text.split(/(\*\*.*?\*\*)/g); 
+    
+        return (
             <Typography
-                key={index}
                 variant="body1"
                 sx={{
                     whiteSpace: "pre-line",
@@ -79,10 +80,19 @@ const ChatBot = () => {
                     marginBottom: "10px",
                 }}
             >
-                {line}
+                {parts.map((part, index) => {
+                    // Check if the part is bold by matching **...**
+                    if (/^\*\*(.*?)\*\*$/.test(part)) {
+                        return (
+                            <strong key={index}>
+                                {part.slice(2, -2)} {/* Remove the ** */}
+                            </strong>
+                        );
+                    }
+                    return part; // Return normal text
+                })}
             </Typography>
-        ));
-        return <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>{formattedText}</Box>;
+        );
     };
 
     return (

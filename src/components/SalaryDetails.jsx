@@ -1,16 +1,29 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Box, Typography } from "@mui/material";
 import SalaryTable from "./UI/SalaryTable";
 import { AppContext } from "../context/AppContext";
 
 const SalaryDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const { grossSalaryInput, handleSave, setGrossSalaryInput,grossSalary } = useContext(AppContext);
+  const { grossSalaryInput, handleSave, setGrossSalaryInput, grossSalary } = useContext(AppContext);
 
-  // Format the numeric input to "LPA" (no decimals)
+  // Format to LPA (non-editing mode)
   const formatToLPA = (value) => {
     if (!value || isNaN(value)) return "0 LPA";
-    return `${Math.floor(value / 100000)} LPA`; // Convert to LPA and round down to the nearest whole number
+    return `${Math.floor(value / 100000)} LPA`; // Convert to LPA and round down
+  };
+
+  // Format to Indian numbering system (editing mode)
+  const formatToINR = (value) => {
+    if (!value) return "";
+    return value.replace(/\D/g, "") // Remove non-numeric characters
+      .replace(/(\d)(?=(\d\d)+\d$)/g, "$1,"); // Add commas as per INR format
+  };
+
+  const handleInputChange = (e) => {
+    const rawValue = e.target.value; // Raw input value
+    const formattedValue = formatToINR(rawValue); // Format to INR
+    setGrossSalaryInput(formattedValue.replace(/,/g, "")); // Store unformatted value
   };
 
   return (
@@ -45,9 +58,9 @@ const SalaryDetails = () => {
             {isEditing ? (
               <>
                 <input
-                  type="number"
-                  value={grossSalaryInput}
-                  onChange={(e) => setGrossSalaryInput(e.target.value)}
+                  type="text"
+                  value={formatToINR(grossSalaryInput)}
+                  onChange={handleInputChange}
                   style={{
                     flexGrow: 1,
                     marginRight: "8px",

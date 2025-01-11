@@ -28,17 +28,29 @@ export const AppProvider = ({ children }) => {
   const [updatedSalaryData, setUpdatedSalaryData] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
+  const resetChatbotState = () => {
+    setMessages([{ text: "Hi there! How can I help you today?", sender: "bot" }]);
+    setConversationId("");
+    setUserMessage("");
+  };
+
+
   const getToken = async () => {
     if (token) return token;
-
+  
+    if (!selectedEmployee || !selectedEmployee.employee_id) {
+      console.error("No employee selected. Cannot fetch token.");
+      return null;
+    }
+  
     const requestBody = {
-      hr_id: "E001",
+      hr_id: selectedEmployee.employee_id, // Use the current selected employee ID
       user_info: {
-        first_name: "ABC",
-        last_name: "PQR",
+        first_name: selectedEmployee.first_name || "ABC", // Use employee's first name, or a default
+        last_name: selectedEmployee.last_name || "PQR",   // Use employee's last name, or a default
       },
     };
-
+  
     try {
       const response = await fetch(
         "https://staging.getpi.in/backend/v1/hrms/hr/token",
@@ -50,9 +62,9 @@ export const AppProvider = ({ children }) => {
           body: JSON.stringify(requestBody),
         }
       );
-
+  
       const data = await response.json();
-
+  
       if (response.ok && data?.data?.data?.token) {
         setToken(data.data.data.token);
         return data.data.data.token;
@@ -143,33 +155,6 @@ export const AppProvider = ({ children }) => {
 
   const apihost = "https://staging.getpi.in/backend/v1/hrms/hr/";
 
-  // const getUser = async (id) => {
-  //     setIsLoading(true);
-  //     setIsError(false);
-  //     try {
-  //         const response = await axios.get(`${apihost}/users/${id}`);
-
-  //         setAllData(response.data)
-  //         if (response.status === 200 && response.data?.data) {
-  //             const { data } = response.data;
-
-  //             const mappedData = data?.map(item => item?.userData || {});
-  //             const mappedTaxData = data?.map(item => item?.userTax || {});
-
-  //             setAllData(response.data);
-  //             setUserData(mappedData);
-  //             setUserTax(mappedTaxData);
-  //         }
-
-  //     }
-
-  //     catch (err) {
-  //         console.error("Error fetching user data:", err);
-  //         setIsError(true);
-  //     } finally {
-  //         setIsLoading(false);
-  //     }
-  // };
 
   const getUser = async (id) => {
     setIsLoading(true);
@@ -195,32 +180,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // const updateSalary = async (grossSalaryInput , id ) => {
-  //     if (!grossSalaryInput) {
-  //         alert("Please enter a gross salary");
-  //         return;
-  //     }
 
-  //     try {
-  //         const response = await axios.put(
-  //             `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${id}`,
-  //             { gross_salary: grossSalaryInput }
-  //         );
-
-  //         if (response.status === 200) {
-  //             alert("Salary data updated successfully");
-  //             setUpdatedSalaryData(response.data.data);
-
-  //             getUser(id);
-  //             fetchSalaryData();
-  //         }
-  //     } catch (error) {
-  //         console.error("Error updating salary:", error);
-  //         alert("Failed to update salary data");
-  //     }
-  // };
-
-  // ANUAL CTC
 
   
   const getUsers = async () => {
@@ -350,7 +310,7 @@ export const AppProvider = ({ children }) => {
                 elss: userData.userTax[0]["80C"].ELSS,
                 providentFund: userData.userSalary[0].pf_contribution,
                 taxSavingFDs: 0,
-                otherTaxSavingInvestment: 0,
+                otherTaxSavingInvestment: userData.userTax[0]["80C"].any_other_tax_saving_instrument,
                 nps: userData.userTax[0]["80CCD"].NPS,
                 healthInsuranceSelfSpouse:
                   userData.userTax[0]["80D"]
@@ -360,7 +320,7 @@ export const AppProvider = ({ children }) => {
                 selfOrSpouseIsSenior: false,
                 seniorCitizenParents: false,
                 preventiveHealthCareExpenditure: 0,
-                interestPaidOnEducationLoan: 0,
+                interestPaidOnEducationLoan: userData.userTax[0]["80E"].education_loan_interest,
                 interestOnHousingLoan80EE: 0,
                 donations80G: userData.userTax[0]["80G"].donations,
                 interestIncomeSavingsAccount: 0,
@@ -389,6 +349,9 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     if (!selectedEmployee) return;
+    setToken(null); // Clear the previous token
+    getToken();
+    resetChatbotState();
     fetchSalaryData();
   }, [selectedEmployee]);
 
