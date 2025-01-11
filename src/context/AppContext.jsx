@@ -221,7 +221,7 @@ export const AppProvider = ({ children }) => {
       const response = await axios.put(
         `https://staging.getpi.in/backend/v1/hrms/hr/user/salary/${selectedEmployee.employee_id}`,
         {
-          gross_salary: grossSalaryInput,
+          gross_salary: grossSalaryInput, 
         }
       );
 
