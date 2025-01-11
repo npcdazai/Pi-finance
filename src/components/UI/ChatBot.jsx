@@ -33,6 +33,7 @@ const ChatBot = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [fadeOut, setFadeOut] = useState(false);
+    // const [showChatbot, setShowChatbot] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null); 
     useEffect(() => {

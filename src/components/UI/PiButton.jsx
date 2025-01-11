@@ -71,7 +71,7 @@ function PiButton({ text }) {
     const { setShowChatbot, showChatbot } = useContext(AppContext)
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <GradientButton onClick={() => setShowChatbot(!showChatbot)} >
+            <GradientButton onClick={() => setShowChatbot(true)} >
                 <span>{text}</span>
             </GradientButton>
         </div>

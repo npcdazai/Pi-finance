@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import SalaryTable from "./UI/SalaryTable";
 import { AppContext } from "../context/AppContext";
@@ -7,24 +7,37 @@ const SalaryDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const { grossSalaryInput, handleSave, setGrossSalaryInput, grossSalary } = useContext(AppContext);
 
-  // Format to LPA (non-editing mode)
   const formatToLPA = (value) => {
     if (!value || isNaN(value)) return "0 LPA";
-    return `${Math.floor(value / 100000)} LPA`; // Convert to LPA and round down
+    return `${Math.floor(value / 100000)} LPA`;
   };
 
-  // Format to Indian numbering system (editing mode)
+  // const formatToINR = (value) => {
+  //   if (!value) return "";
+  //   value = String(value).replace(/\D/g, ""); 
+  //   return value.replace(/(\d)(?=(\d\d)+\d$)/g, "$1,"); 
+  // };
+
   const formatToINR = (value) => {
     if (!value) return "";
-    return value.replace(/\D/g, "") // Remove non-numeric characters
-      .replace(/(\d)(?=(\d\d)+\d$)/g, "$1,"); // Add commas as per INR format
+    const stringValue = value.toString(); 
+    return stringValue
+      .replace(/\D/g, "") 
+      .replace(/(\d)(?=(\d\d)+\d$)/g, "$1,"); 
   };
 
+
   const handleInputChange = (e) => {
-    const rawValue = e.target.value; // Raw input value
-    const formattedValue = formatToINR(rawValue); // Format to INR
-    setGrossSalaryInput(formattedValue.replace(/,/g, "")); // Store unformatted value
+    const rawValue = e.target.value;
+    const formattedValue = formatToINR(rawValue);
+    setGrossSalaryInput(formattedValue.replace(/,/g, ""));
   };
+
+  useEffect(() => {
+    if (isEditing) {
+      setGrossSalaryInput(grossSalary);
+    }
+  }, [isEditing, grossSalary, setGrossSalaryInput]);
 
   return (
     <div>
@@ -88,7 +101,7 @@ const SalaryDetails = () => {
             ) : (
               <>
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                  INR {formatToLPA(grossSalary)}
+                  INR {formatToLPA(grossSalary)} {/* Display LPA in non-editing mode */}
                 </Typography>
                 <button
                   style={{
@@ -99,7 +112,7 @@ const SalaryDetails = () => {
                     color: "#1976d2",
                     cursor: "pointer",
                   }}
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setIsEditing(true)} // Set isEditing to true when "Edit" is clicked
                 >
                   Edit
                 </button>
