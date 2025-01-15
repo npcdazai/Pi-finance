@@ -159,7 +159,7 @@ export default function Appbar() {
               <LogoImage src={logo} alt="Pi-Finance Logo" />
               <LogoText>
                 <Typography color="#000000" fontWeight={700} fontSize="14px">
-                  Financial
+                  Financial Wellness
                 </Typography>
                 <Typography color="#8E8E8E" fontSize="14px" fontWeight={400}>
                   Dashboard

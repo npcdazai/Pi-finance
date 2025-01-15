@@ -48,10 +48,20 @@ const HRASection = ({ financialYear, employeeId }) => {
 
   if (loading) return <Typography>Loading...</Typography>;
 
+  // Function to format and capitalize the keys
   const getLabel = (key) => {
-    if (key === "state1") return "Rent Paid - 10% of Basic";
-    if (key === "state2") return "50% of Basic Salary";
-    return key.replace(/([A-Z])/g, " $1").replace(/^[a-z]/, (m) => m.toUpperCase());
+    const labelMap = {
+      city: "City",
+      houseType: "House Type",
+      rentPaidAnnual: "Rent Paid (Annual)",
+      hraReceived: "HRA Received",
+      state1: "Rent Paid - 10% of Basic",
+      state2: "40%/50% of Basic Salary",
+      hraDeductible: "HRA Deductible",
+    };
+
+    // Return the mapped label for each key or default capitalized version of the key
+    return labelMap[key] || key.replace(/([A-Z])/g, " $1").replace(/^[a-z]/, (m) => m.toUpperCase());
   };
 
   return (

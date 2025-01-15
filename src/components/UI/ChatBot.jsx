@@ -31,11 +31,10 @@ const ChatBot = () => {
         handleSendMessage,
     } = useContext(AppContext);
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [fadeOut, setFadeOut] = useState(false);
-    // const [showChatbot, setShowChatbot] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Tracks whether the bot is processing
     const messagesEndRef = useRef(null);
-    const inputRef = useRef(null); 
+    const inputRef = useRef(null);
+
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -44,33 +43,41 @@ const ChatBot = () => {
 
     useEffect(() => {
         if (showChatbot && inputRef.current) {
-            inputRef.current.focus(); 
+            inputRef.current.focus();
         }
     }, [showChatbot]);
 
-    const handleSendMessageWithDelay = () => {
+    const simulateBotResponse = async () => {
+        // Simulate a delay (but no response is provided)
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(""); // Empty response simulating no further message after analyzing
+            }, 3000); // Simulate 3 seconds delay for response
+        });
+    };
+
+    const handleSendMessageWithDelay = async () => {
         handleSendMessage();
         setIsLoading(true);
 
-        setTimeout(() => {
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { sender: "bot", text: "Analyzing..." },
-            ]);
-            setFadeOut(true);
+        // Add the "Analyzing..." message
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", text: "Analyzing..." },
+        ]);
 
-            setTimeout(() => {
-                setFadeOut(false);
-                setMessages((prevMessages) =>
-                    prevMessages.filter((msg) => msg.text !== "Analyzing...")
-                );
-                setIsLoading(false);
-            }, 2000);
-        }, 1000);
+        // Simulate or fetch the bot's response (but in this case, it doesn't return anything)
+        await simulateBotResponse();
+
+        setIsLoading(false); // Analysis complete, stop loading
     };
 
     const formatBotResponse = (text) => {
-        const parts = text.split(/(\*\*.*?\*\*)/g); 
+        // Remove all occurrences of ### markers and the content in between
+        const cleanText = text.replace(/###.*?###/g, '');
+    
+        // Split text into parts for bold formatting
+        const parts = cleanText.split(/(\*\*.*?\*\*)/g);
     
         return (
             <Typography
@@ -82,15 +89,15 @@ const ChatBot = () => {
                 }}
             >
                 {parts.map((part, index) => {
-                    // Check if the part is bold by matching **...**
+                    // If the part is bold (wrapped with **), render it in <strong>
                     if (/^\*\*(.*?)\*\*$/.test(part)) {
                         return (
                             <strong key={index}>
-                                {part.slice(2, -2)} {/* Remove the ** */}
+                                {part.slice(2, -2)}
                             </strong>
                         );
                     }
-                    return part; // Return normal text
+                    return part;
                 })}
             </Typography>
         );
@@ -207,7 +214,7 @@ const ChatBot = () => {
                             </ListItem>
                         ))}
                         {isLoading && (
-                            <Fade in={!fadeOut} timeout={1000}>
+                            <Fade in timeout={1000}>
                                 <ListItem sx={{ display: "flex", justifyContent: "flex-start" }}>
                                     <ListItemText
                                         sx={{
@@ -234,7 +241,7 @@ const ChatBot = () => {
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") handleSendMessageWithDelay();
                             }}
-                            inputRef={inputRef} 
+                            inputRef={inputRef}
                         />
                         <Button
                             variant="contained"

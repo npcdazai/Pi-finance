@@ -9,7 +9,8 @@ const SalaryDetails = () => {
 
   const formatToLPA = (value) => {
     if (!value || isNaN(value)) return "0 LPA";
-    return `${Math.floor(value / 100000)} LPA`;
+    const roundedValue = Math.round(value / 100000); // Round off the value in LPA
+    return `${roundedValue} LPA`; // Return the rounded value
   };
 
   // const formatToINR = (value) => {
@@ -26,13 +27,21 @@ const SalaryDetails = () => {
       .replace(/(\d)(?=(\d\d)+\d$)/g, "$1,"); 
   };
 
-
   const handleInputChange = (e) => {
-    const rawValue = e.target.value;
+    const inputElement = e.target;
+    const rawValue = inputElement.value.replace(/,/g, ""); // Remove commas for processing
+    const cursorPosition = inputElement.selectionStart; // Save cursor position
+  
+    // Format the value as INR
     const formattedValue = formatToINR(rawValue);
-    setGrossSalaryInput(formattedValue.replace(/,/g, ""));
+    setGrossSalaryInput(formattedValue.replace(/,/g, "")); // Update the state without commas
+  
+    // Restore the cursor position
+    setTimeout(() => {
+      inputElement.setSelectionRange(cursorPosition, cursorPosition);
+    }, 0);
   };
-
+  
   useEffect(() => {
     if (isEditing) {
       setGrossSalaryInput(grossSalary);
