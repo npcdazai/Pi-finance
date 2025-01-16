@@ -273,7 +273,7 @@ export const AppProvider = ({ children }) => {
 
           // Fetch salary score using gross salary
           const salaryScoreResponse = await fetch(
-            "https://staging.getpi.in/backend/v1/hrms/tax/salary_score",
+            `https://staging.getpi.in/backend/v1/hrms/tax/salary_score/${selectedEmployee.employee_id}`,
             {
               method: "POST",
               headers: {
@@ -290,7 +290,7 @@ export const AppProvider = ({ children }) => {
 
           // Prepare tax calculation data dynamically from userData
           const taxCalculationResponse = await fetch(
-            "https://staging.getpi.in/backend/v1/hrms/tax/tax_calculation",
+            `https://staging.getpi.in/backend/v1/hrms/tax/tax_calculation/${selectedEmployee.employee_id}`,
             {
               method: "POST",
               headers: {
