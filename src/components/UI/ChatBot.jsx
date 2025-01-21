@@ -73,11 +73,14 @@ const ChatBot = () => {
     };
 
     const formatBotResponse = (text) => {
+        // Remove LaTeX-like escape characters `\`
+        const cleanText = text.replace(/\\/g, '');
+    
         // Remove all occurrences of ### markers and the content in between
-        const cleanText = text.replace(/###.*?###/g, '');
+        const sanitizedText = cleanText.replace(/###.*?###/g, '');
     
         // Split text into parts for bold formatting
-        const parts = cleanText.split(/(\*\*.*?\*\*)/g);
+        const parts = sanitizedText.split(/(\*\*.*?\*\*)/g);
     
         return (
             <Typography
@@ -102,7 +105,7 @@ const ChatBot = () => {
             </Typography>
         );
     };
-
+    
     return (
         <Box>
             <Box
